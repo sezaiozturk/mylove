@@ -1,11 +1,10 @@
-import {View, Appearance, Button} from 'react-native';
+import {View, Appearance, Button, Text} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import React, {useEffect, useState} from 'react';
 import {change, changeTheme} from './redux/theme/themeSlice';
 import {changeLocale} from './redux/locale/localeSlice';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
-import {Text} from 'ncore-mobile';
 
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState(Appearance.getColorScheme());
@@ -22,7 +21,6 @@ const App = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.secondary}}>
-      <Text>{locale.language}</Text>
       <Button title={locale.continue} />
       <Button title={locale.save} />
       <Button title={locale.signup} />
@@ -30,6 +28,13 @@ const App = () => {
         title="change language"
         onPress={() => dispatch(changeLocale())}
       />
+      <Text
+        style={{
+          fontSize: 100,
+          fontFamily: 'TiltPrism-Regular',
+        }}>
+        {locale.save}
+      </Text>
     </View>
   );
 };
