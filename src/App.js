@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import React, {useEffect, useState} from 'react';
 import {change, changeTheme} from './redux/theme/themeSlice';
 import {changeLocale} from './redux/locale/localeSlice';
+import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
 
@@ -16,6 +17,7 @@ const App = () => {
   const locale = useSelector(({locale}) => locale.locale);
 
   useEffect(() => {
+    SplashScreen.hide();
     dispatch(changeTheme(currentTheme));
   }, [currentTheme]);
 
