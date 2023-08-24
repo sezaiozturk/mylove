@@ -6,6 +6,12 @@ import {changeLocale} from './redux/locale/localeSlice';
 import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState(Appearance.getColorScheme());
@@ -13,8 +19,6 @@ const App = () => {
     setCurrentTheme(scheme.colorScheme);
   });
   const dispatch = useDispatch();
-  const colors = useSelector(({theme}) => theme.colors);
-  const locale = useSelector(({locale}) => locale.locale);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -22,22 +26,12 @@ const App = () => {
   }, [currentTheme]);
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.secondary}}>
-      <Button title={locale.continue} />
-      <Button title={locale.save} />
-      <Button title={locale.signup} />
-      <Button
-        title="change language"
-        onPress={() => dispatch(changeLocale())}
-      />
-      <Text
-        style={{
-          fontSize: 100,
-          fontFamily: 'TiltPrism-Regular',
-        }}>
-        {locale.save}
-      </Text>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home2" component={HomeScreen2} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -46,6 +40,55 @@ const ContextApi = () => {
     <Provider store={store}>
       <App />
     </Provider>
+  );
+};
+
+const HomeScreen = () => {
+  const colors = useSelector(({theme}) => theme.colors);
+  const locale = useSelector(({locale}) => locale.locale);
+  return (
+    <View>
+      <Button
+        title={locale.save}
+        onPress={() => {
+          dispatch(changeLocale());
+        }}
+      />
+      <Button
+        title={locale.save}
+        onPress={() => {
+          dispatch(changeLocale());
+        }}
+      />
+      <View
+        style={{
+          backgroundColor: colors.primary,
+          width: 100,
+          height: 100,
+        }}></View>
+      <View
+        style={{
+          backgroundColor: colors.primary,
+          width: 100,
+          height: 100,
+        }}></View>
+    </View>
+  );
+};
+
+const HomeScreen2 = () => {
+  const colors = useSelector(({theme}) => theme.colors);
+  const locale = useSelector(({locale}) => locale.locale);
+  return (
+    <View>
+      <Button title={locale.save} onPress={() => {}} />
+      <View
+        style={{
+          backgroundColor: colors.primary,
+          width: 100,
+          height: 100,
+        }}></View>
+    </View>
   );
 };
 
