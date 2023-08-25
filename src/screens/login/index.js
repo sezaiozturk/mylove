@@ -10,7 +10,15 @@ const Login = () => {
       <Button title={'Kaydet'} variant="ghost" />
       <Button title={'Disable'} disabled />
       <Button title={'deneme'} spreadBehavior="baseline" />
-      <Button title={'Ghot'} variant="ghost" spreadBehavior="baseline" icon />
+      <Button
+        title={'Ghot'}
+        variant="ghost"
+        spreadBehavior="baseline"
+        icon="send"
+        iconColor="purple"
+        iconSize={30}
+      />
+      <Button title={'Ghot'} icon="send" reverse />
     </View>
   );
 };

@@ -3,12 +3,15 @@ import {StyleSheet} from 'react-native';
 const deneme = ({colors}) => {
   const base_style = StyleSheet.create({
     container: {
-      textAlign: 'center',
-      alignItems: 'center',
-      marginHorizontal: 20,
-      borderRadius: 20,
-      paddingVertical: 10,
+      justifyContent: 'center',
       paddingHorizontal: 20,
+      marginHorizontal: 20,
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 10,
+      textAlign: 'center',
+      borderRadius: 20,
+      gap: 15,
     },
     title: {
       color: colors.primary,
