@@ -66,7 +66,7 @@ const typography = {
   },
 };
 const colors = {
-  primary: '#f5df4e',
+  primary: '#DF436D',
   secondary: '#141414',
   black: '#f5f5f5',
   text: '#f5f5f5',
