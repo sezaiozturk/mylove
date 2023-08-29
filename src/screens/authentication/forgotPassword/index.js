@@ -1,15 +1,17 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Input, Button} from '../../../components';
 import {Formik} from 'formik';
-import * as Yup from 'yup';
 import style from '../stylesheet';
 import {useSelector} from 'react-redux';
+import {forgotSchema} from '../validationSchema';
+import auth from '@react-native-firebase/auth';
 
 const ForgotPassword = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
+  const [load, setLoad] = useState(false);
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -19,13 +21,19 @@ const ForgotPassword = ({navigation}) => {
         <Formik
           initialValues={{
             email: '',
-            password: '',
           }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email().required(),
-            password: Yup.string().required(),
-          })}
-          onSubmit={values => console.log(values)}>
+          validationSchema={forgotSchema}
+          onSubmit={async ({email}) => {
+            setLoad(true);
+            try {
+              await auth().sendPasswordResetEmail(email);
+              navigation.navigate('LoginScreen');
+              setLoad(false);
+            } catch (e) {
+              setLoad(false);
+              console.log(e);
+            }
+          }}>
           {({
             handleSubmit,
             handleChange,
@@ -45,7 +53,10 @@ const ForgotPassword = ({navigation}) => {
                 placeHolder={'center e mail'}
               />
               <View style={classes.spaces} />
-              <Button title="Send" onPress={handleSubmit}></Button>
+              <Button
+                title="Send"
+                onPress={handleSubmit}
+                loading={load}></Button>
             </View>
           )}
         </Formik>

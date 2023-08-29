@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1022113131610",
+    "project_id": "mylove-987dc",
+    "storage_bucket": "mylove-987dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022113131610:android:a24c9b413466f1448c3c63",
+        "android_client_info": {
+          "package_name": "com.mylove"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022113131610-9imdvvv8unje21v21nnvmv3qilr3muq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2lZ8TFcOWqi7NIf0k5jJfDUQYqTeLxx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022113131610-9imdvvv8unje21v21nnvmv3qilr3muq4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

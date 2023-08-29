@@ -1,16 +1,18 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Input, Button} from '../../../components';
 import {Formik} from 'formik';
-import * as Yup from 'yup';
 import style from '../stylesheet';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {loginSchema} from '../validationSchema';
+import auth from '@react-native-firebase/auth';
 
 const Login = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
+  const [load, setLoad] = useState(false);
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -22,11 +24,18 @@ const Login = ({navigation}) => {
             email: '',
             password: '',
           }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email().required(),
-            password: Yup.string().required(),
-          })}
-          onSubmit={values => console.log(values)}>
+          validationSchema={loginSchema}
+          onSubmit={async ({email, password}) => {
+            setLoad(true);
+            try {
+              await auth().signInWithEmailAndPassword(email, password);
+              navigation.navigate('HomeTab');
+              setLoad(false);
+            } catch (e) {
+              console.log(e);
+              setLoad(false);
+            }
+          }}>
           {({
             handleSubmit,
             handleChange,
@@ -63,7 +72,10 @@ const Login = ({navigation}) => {
                   onPress={() => navigation.navigate('ForgotScreen')}
                 />
               </View>
-              <Button title="Login" onPress={handleSubmit}></Button>
+              <Button
+                title="Login"
+                onPress={handleSubmit}
+                loading={load}></Button>
             </View>
           )}
         </Formik>

@@ -1,16 +1,18 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Input, Button} from '../../../components';
 import {Formik} from 'formik';
-import * as Yup from 'yup';
 import style from '../stylesheet';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {signupSchema} from '../validationSchema';
+import auth from '@react-native-firebase/auth';
 
 const Signup = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
+  const [load, setLoad] = useState(false);
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -23,11 +25,26 @@ const Signup = ({navigation}) => {
             password: '',
             confirmPassword: '',
           }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email().required(),
-            password: Yup.string().required(),
-          })}
-          onSubmit={values => console.log(values)}>
+          validationSchema={signupSchema}
+          onSubmit={async values => {
+            setLoad(true);
+            auth()
+              .createUserWithEmailAndPassword(values.email, values.password)
+              .then(() => {
+                navigation.navigate('LoginScreen');
+                setLoad(false);
+              })
+              .catch(error => {
+                setLoad(false);
+                if (error.code === 'auth/email-already-in-use') {
+                  console.log('That email address is already in use!');
+                }
+                if (error.code === 'auth/invalid-email') {
+                  console.log('That email address is invalid!');
+                }
+                console.error(error);
+              });
+          }}>
           {({
             handleSubmit,
             handleChange,
@@ -61,13 +78,16 @@ const Signup = ({navigation}) => {
                 value={values.confirmPassword}
                 onChangeText={handleChange('confirmPassword')}
                 onBlur={handleBlur('confirmPassword')}
-                touched={touched.password}
-                errors={errors.password}
+                touched={touched.confirmPassword}
+                errors={errors.confirmPassword}
                 placeHolder={'center password'}
                 secureTextEntry={true}
               />
               <View style={classes.spaces} />
-              <Button title="Signup" onPress={handleSubmit}></Button>
+              <Button
+                title="Signup"
+                onPress={handleSubmit}
+                loading={load}></Button>
             </View>
           )}
         </Formik>

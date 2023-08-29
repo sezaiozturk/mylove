@@ -31,7 +31,7 @@ const Button = ({
         ]}>
         {loading && (
           <Text>
-            <Icon name={'clock-outline'} size={25} color={'white'} />
+            <Icon name={'clock-outline'} size={20} color={'white'} />
           </Text>
         )}
         {icon && (
