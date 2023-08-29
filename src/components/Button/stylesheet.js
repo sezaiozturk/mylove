@@ -1,11 +1,10 @@
 import {StyleSheet} from 'react-native';
 
-const deneme = ({colors}) => {
+const style = ({colors}) => {
   const base_style = StyleSheet.create({
     container: {
       justifyContent: 'center',
       paddingHorizontal: 20,
-      marginHorizontal: 20,
       alignItems: 'center',
       flexDirection: 'row',
       paddingVertical: 10,
@@ -44,9 +43,13 @@ const deneme = ({colors}) => {
       container: {
         ...base_style.container,
         backgroundColor: 'transparent',
-        paddingHorizontal: 30,
+        paddingHorizontal: 15,
+      },
+      title: {
+        ...base_style.title,
+        fontSize: 12,
       },
     }),
   };
 };
-export default deneme;
+export default style;

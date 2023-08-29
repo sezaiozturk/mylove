@@ -5,14 +5,8 @@ const typography = {
     fontSize: 16,
   },
   header1: {
-    fontFamily: 'Montserrat-Regular',
-    lineHeight: 2,
+    fontFamily: 'TiltPrism-Regular',
     fontSize: 50,
-  },
-  myFont: {
-    fontFamily: 'My-Font',
-    lineHeight: 1.2,
-    fontSize: 24,
   },
   title1: {
     fontSize: 40,

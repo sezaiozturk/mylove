@@ -5,7 +5,7 @@ const typography = {
     fontSize: 16,
   },
   header1: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'TiltPrism-Regular',
     lineHeight: 2,
     fontSize: 50,
   },
