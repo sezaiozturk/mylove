@@ -17,7 +17,7 @@ const style = ({colors}) => {
       gap: 8,
     },
     title: {
-      color: colors.gray200,
+      color: colors.primary,
     },
     input: {
       color: colors.text,

@@ -3,6 +3,10 @@ const typography = {
     fontFamily: 'Kalam-Bold',
     fontSize: 50,
   },
+  header2: {
+    fontFamily: 'Kalam-Bold',
+    fontSize: 18,
+  },
   title1: {
     fontSize: 14,
     fontFamily: 'Kalam-Regular',

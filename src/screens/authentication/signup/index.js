@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {signupSchema} from '../validationSchema';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Signup = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
@@ -31,6 +32,7 @@ const Signup = ({navigation}) => {
             auth()
               .createUserWithEmailAndPassword(values.email, values.password)
               .then(() => {
+                AsyncStorage.setItem(values.email, 0);
                 navigation.navigate('LoginScreen');
                 setLoad(false);
               })

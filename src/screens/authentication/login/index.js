@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {loginSchema} from '../validationSchema';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
@@ -28,8 +29,13 @@ const Login = ({navigation}) => {
           onSubmit={async ({email, password}) => {
             setLoad(true);
             try {
+              AsyncStorage.getItem(email).then(result => {
+                result === 1
+                  ? navigation.navigate('HomeTab')
+                  : navigation.navigate('ProfileScreen');
+              });
               await auth().signInWithEmailAndPassword(email, password);
-              navigation.navigate('HomeTab');
+
               setLoad(false);
             } catch (e) {
               console.log(e);

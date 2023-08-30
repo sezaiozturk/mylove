@@ -1,12 +1,21 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import style from './stylesheet';
 import {Button} from '../../components';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tasks = ({navigation}) => {
+  useEffect(() => {
+    {
+      AsyncStorage.getItem(auth().currentUser.email).then(res =>
+        console.log(res),
+      );
+    }
+  }, []);
   return (
     <View>
+      <Text style={{color: 'black', fontSize: 30}}></Text>
       <Button
         title="çık"
         onPress={() => {
