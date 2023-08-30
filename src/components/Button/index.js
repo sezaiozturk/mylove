@@ -17,6 +17,7 @@ const Button = ({
   loading,
 }) => {
   const colors = useSelector(({theme}) => theme.colors);
+  const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
   return (
     <View>
@@ -39,7 +40,11 @@ const Button = ({
             <Icon name={icon} size={iconSize} color={iconColor} />
           </Text>
         )}
-        {title && <Text style={classes[variant].title}>{title}</Text>}
+        {title && (
+          <Text style={[classes[variant].title, typography.title2]}>
+            {title}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );

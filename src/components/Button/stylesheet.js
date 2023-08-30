@@ -14,7 +14,6 @@ const style = ({colors}) => {
     },
     title: {
       color: colors.primary,
-      fontWeight: '500',
     },
   });
   return {
@@ -26,7 +25,7 @@ const style = ({colors}) => {
       },
       title: {
         ...base_style.title,
-        color: colors.text,
+        color: colors.title,
       },
     }),
     outlined: StyleSheet.create({
@@ -47,7 +46,6 @@ const style = ({colors}) => {
       },
       title: {
         ...base_style.title,
-        fontSize: 12,
       },
     }),
   };

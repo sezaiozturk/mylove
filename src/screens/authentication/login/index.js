@@ -82,7 +82,7 @@ const Login = ({navigation}) => {
         <View style={classes.bottomContainer}>
           <Text style={classes.text}>Log in with existing account?</Text>
           <Text>
-            <Icon name="google" size={30} color={'black'} />
+            <Icon name="google" size={30} color={colors.gray200} />
           </Text>
           <View style={classes.innerContainer}>
             <Text style={classes.text}>Don’t have an account?</Text>

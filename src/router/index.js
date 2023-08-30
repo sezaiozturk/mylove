@@ -1,8 +1,9 @@
 import {View, Text, Button} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {ForgotPassword, Login, Signup, Tasks} from '../screens';
+import auth from '@react-native-firebase/auth';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -16,8 +17,11 @@ const HomeTab = () => {
   );
 };
 const Router = () => {
+  const user = auth().currentUser;
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName={user && 'HomeTab'}>
       <Stack.Screen name="LoginScreen" component={Login} />
       <Stack.Screen name="SignupScreen" component={Signup} />
       <Stack.Screen name="ForgotScreen" component={ForgotPassword} />

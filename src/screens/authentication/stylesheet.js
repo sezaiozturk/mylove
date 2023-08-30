@@ -15,9 +15,10 @@ const style = ({colors}) => {
     },
     title: {
       textAlign: 'center',
+      color: colors.title,
     },
     formContainer: {
-      backgroundColor: colors.gray,
+      backgroundColor: colors.secondary,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
       paddingBottom: 50,
@@ -44,9 +45,9 @@ const style = ({colors}) => {
       alignItems: 'center',
     },
     text: {
+      fontFamily: 'Kalam-Regular',
       color: colors.gray100,
-      fontSize: 14,
-      fontWeight: '500',
+      fontSize: 15,
     },
   });
 };

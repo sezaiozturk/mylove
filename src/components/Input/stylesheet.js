@@ -17,17 +17,15 @@ const style = ({colors}) => {
       gap: 8,
     },
     title: {
-      color: colors.primary,
-      fontSize: 12,
+      color: colors.gray200,
     },
     input: {
-      color: 'black',
-      fontSize: 14,
+      color: colors.text,
       padding: 0,
       flex: 1,
     },
     error: {
-      color: 'black',
+      color: colors.gray200,
     },
   });
 };

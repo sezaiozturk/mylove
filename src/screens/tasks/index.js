@@ -1,11 +1,19 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import style from './stylesheet';
+import {Button} from '../../components';
+import auth from '@react-native-firebase/auth';
 
-const Tasks = () => {
+const Tasks = ({navigation}) => {
   return (
     <View>
-      <Text>Tasks Screen</Text>
+      <Button
+        title="çık"
+        onPress={() => {
+          auth().signOut();
+          navigation.navigate('LoginScreen');
+        }}
+      />
     </View>
   );
 };

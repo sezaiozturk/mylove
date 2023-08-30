@@ -15,20 +15,21 @@ const Input = ({
   secureTextEntry,
 }) => {
   const colors = useSelector(({theme}) => theme.colors);
+  const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
 
   return (
     <View style={classes.container}>
-      <Text style={classes.title}>{title}</Text>
+      <Text style={[classes.title, typography.title1]}>{title}</Text>
       <View style={classes.inputContainer}>
         <TextInput
           selectionColor={colors.primary}
           cursorColor={colors.primary}
-          style={classes.input}
+          style={[classes.input, typography.title2]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeHolder}
-          placeholderTextColor={'gray'}
+          placeholderTextColor={colors.gray100}
           secureTextEntry={secureTextEntry}
         />
         <TouchableOpacity onPress={() => null}>
@@ -37,7 +38,9 @@ const Input = ({
           </Text>
         </TouchableOpacity>
       </View>
-      {errors && touched && <Text style={classes.error}>{errors}</Text>}
+      {errors && touched && (
+        <Text style={[classes.error, typography.title1]}>{errors}</Text>
+      )}
     </View>
   );
 };
