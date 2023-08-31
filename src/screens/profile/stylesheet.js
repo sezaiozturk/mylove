@@ -40,10 +40,19 @@ const style = ({colors}) => {
     },
     inputContainer: {
       marginBottom: 30,
+      gap: 20,
+    },
+    calendarContainer: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      alignItems: 'flex-end',
       gap: 10,
     },
+    calendar: {
+      marginBottom: 6,
+    },
     spaces: {
-      padding: 20,
+      padding: 15,
     },
     bottomContainer: {
       justifyContent: 'center',
@@ -58,6 +67,7 @@ const style = ({colors}) => {
     },
     link: {
       color: colors.primary,
+      textDecorationLine: 'underline',
     },
   });
 };

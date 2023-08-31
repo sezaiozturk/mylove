@@ -12,6 +12,19 @@ const ForgotPassword = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
+
+  const handleForgot = async ({email}) => {
+    setLoad(true);
+    try {
+      await auth().sendPasswordResetEmail(email);
+      navigation.navigate('LoginScreen');
+      setLoad(false);
+    } catch (e) {
+      setLoad(false);
+      console.log(e);
+    }
+  };
+
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -23,17 +36,7 @@ const ForgotPassword = ({navigation}) => {
             email: '',
           }}
           validationSchema={forgotSchema}
-          onSubmit={async ({email}) => {
-            setLoad(true);
-            try {
-              await auth().sendPasswordResetEmail(email);
-              navigation.navigate('LoginScreen');
-              setLoad(false);
-            } catch (e) {
-              setLoad(false);
-              console.log(e);
-            }
-          }}>
+          onSubmit={handleForgot}>
           {({
             handleSubmit,
             handleChange,

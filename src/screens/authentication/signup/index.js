@@ -14,6 +14,27 @@ const Signup = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
+
+  const handleSignup = ({email, password}) => {
+    setLoad(true);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        AsyncStorage.setItem(values.email, 0);
+        navigation.navigate('LoginScreen');
+        setLoad(false);
+      })
+      .catch(error => {
+        setLoad(false);
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+        console.error(error);
+      });
+  };
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -27,26 +48,7 @@ const Signup = ({navigation}) => {
             confirmPassword: '',
           }}
           validationSchema={signupSchema}
-          onSubmit={async values => {
-            setLoad(true);
-            auth()
-              .createUserWithEmailAndPassword(values.email, values.password)
-              .then(() => {
-                AsyncStorage.setItem(values.email, 0);
-                navigation.navigate('LoginScreen');
-                setLoad(false);
-              })
-              .catch(error => {
-                setLoad(false);
-                if (error.code === 'auth/email-already-in-use') {
-                  console.log('That email address is already in use!');
-                }
-                if (error.code === 'auth/invalid-email') {
-                  console.log('That email address is invalid!');
-                }
-                console.error(error);
-              });
-          }}>
+          onSubmit={handleSignup}>
           {({
             handleSubmit,
             handleChange,

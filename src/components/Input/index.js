@@ -13,6 +13,7 @@ const Input = ({
   touched,
   errors,
   secureTextEntry,
+  editable,
 }) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
@@ -31,6 +32,7 @@ const Input = ({
           placeholder={placeHolder}
           placeholderTextColor={colors.gray100}
           secureTextEntry={secureTextEntry}
+          editable={editable}
         />
         <TouchableOpacity onPress={() => null}>
           <Text>

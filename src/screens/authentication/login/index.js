@@ -14,6 +14,24 @@ const Login = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
+
+  const handleLogin = async ({email, password}) => {
+    setLoad(true);
+    try {
+      AsyncStorage.getItem(email).then(result => {
+        result === 1
+          ? navigation.navigate('HomeTab')
+          : navigation.navigate('ProfileScreen');
+      });
+      await auth().signInWithEmailAndPassword(email, password);
+
+      setLoad(false);
+    } catch (e) {
+      console.log(e);
+      setLoad(false);
+    }
+  };
+
   return (
     <View style={classes.container}>
       <View style={classes.titleContainer}>
@@ -26,22 +44,7 @@ const Login = ({navigation}) => {
             password: '',
           }}
           validationSchema={loginSchema}
-          onSubmit={async ({email, password}) => {
-            setLoad(true);
-            try {
-              AsyncStorage.getItem(email).then(result => {
-                result === 1
-                  ? navigation.navigate('HomeTab')
-                  : navigation.navigate('ProfileScreen');
-              });
-              await auth().signInWithEmailAndPassword(email, password);
-
-              setLoad(false);
-            } catch (e) {
-              console.log(e);
-              setLoad(false);
-            }
-          }}>
+          onSubmit={handleLogin}>
           {({
             handleSubmit,
             handleChange,

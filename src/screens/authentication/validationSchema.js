@@ -18,3 +18,8 @@ export const signupSchema = Yup.object().shape({
 export const forgotSchema = Yup.object().shape({
   email: Yup.string().email().required(),
 });
+
+export const nameSchema = Yup.object().shape({
+  name: Yup.string().required(),
+  dateOfBirth: Yup.string().required(),
+});
