@@ -21,7 +21,7 @@ const Match = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
 
-  const [copiedText, setCopiedText] = useState(false);
+  const [copiedText, setCopiedText] = useState('burası');
   const [page, setPage] = useState(true);
   const uid = 'DFH345HKJHB533443JKJ';
 
@@ -41,10 +41,13 @@ const Match = ({navigation}) => {
           />
         </View>
         <View style={classes.row}>
-          <View style={{flex: 1}}>
-            <Button title={uid} />
-          </View>
-          <TouchableOpacity>
+          <Text style={[classes.uid, typography.title2]}>{uid}</Text>
+          <TouchableOpacity
+            onPress={async () => {
+              Clipboard.setString(uid);
+              const text = await Clipboard.getString();
+              setCopiedText(text);
+            }}>
             <Text>
               <Icon name="content-copy" size={30} color={colors.primary} />
             </Text>

@@ -25,6 +25,14 @@ const style = ({colors}) => {
       paddingVertical: 30,
       gap: 15,
     },
+    uid: {
+      backgroundColor: colors.primary,
+      textAlign: 'center',
+      borderRadius: 10,
+      color: 'black',
+      padding: 10,
+      flex: 1,
+    },
     seperatorContainer: {
       flexDirection: 'row',
       alignItems: 'center',
