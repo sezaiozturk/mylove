@@ -22,7 +22,7 @@ const typography = {
   },
 };
 const colors = {
-  primary: '#8deeee',
+  primary: '#8DEEEE',
   secondary: '#141414',
   title: '#252b33',
   text: '#f5f5f5',

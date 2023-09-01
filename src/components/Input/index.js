@@ -21,7 +21,7 @@ const Input = ({
 
   return (
     <View style={classes.container}>
-      <Text style={[classes.title, typography.title1]}>{title}</Text>
+      {title && <Text style={[classes.title, typography.title1]}>{title}</Text>}
       <View style={classes.inputContainer}>
         <TextInput
           selectionColor={colors.primary}

@@ -20,7 +20,7 @@ const Profile = ({navigation}) => {
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
   const [photoUrl, setPhotoUrl] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [dateOfBirth, setDateOfBirth] = useState('');
 
   const [pickerMode, setPickerMode] = useState(null);
   const [inline, setInline] = useState(false);
@@ -113,7 +113,7 @@ const Profile = ({navigation}) => {
         <Formik
           initialValues={{
             name: '',
-            dateOfBirth: {dateOfBirth},
+            dateOfBirth: '',
           }}
           validationSchema={nameSchema}
           onSubmit={handleSave}>
@@ -127,10 +127,9 @@ const Profile = ({navigation}) => {
           }) => (
             <View style={classes.inputContainer}>
               <Input
-                title={'Name'}
+                title="Name"
                 value={values.name}
                 onChangeText={handleChange('name')}
-                onBlur={handleBlur('name')}
                 touched={touched.name}
                 errors={errors.name}
                 placeHolder={'center name'}
@@ -138,14 +137,13 @@ const Profile = ({navigation}) => {
               <View style={classes.calendarContainer}>
                 <View style={{flex: 1}}>
                   <Input
-                    title={'Date of Birthday'}
-                    value={dateOfBirth}
-                    onChangeText={handleChange('dateOfBirth')}
-                    onBlur={handleBlur('dateOfBirth')}
-                    touched={true}
-                    errors={true}
+                    title="Date of Birthday"
+                    value={values.dateOfBirth}
+                    touched={touched.dateOfBirth}
+                    errors={errors.dateOfBirth}
                     placeHolder={'center date of birthday'}
-                    editable={false}
+                    editable={true}
+                    onChangeText={handleChange('dateOfBirth')}
                   />
                 </View>
                 <TouchableOpacity
@@ -160,7 +158,21 @@ const Profile = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
+              <DateTimePickerModal
+                isVisible={pickerMode !== null}
+                mode={pickerMode}
+                onConfirm={date => {
+                  hidePicker();
+                  handleChange('dateOfBirth');
+                  setDateOfBirth(
+                    `${date.getDate()} / ${
+                      date.getMonth() + 1
+                    } / ${date.getFullYear()}`,
+                  );
+                }}
+                onCancel={hidePicker}
+                display={inline ? 'inline' : undefined}
+              />
               <View style={classes.spaces} />
               <Button
                 title="Save"
@@ -178,13 +190,6 @@ const Profile = ({navigation}) => {
           </Text>
         </View>
       </View>
-      <DateTimePickerModal
-        isVisible={pickerMode !== null}
-        mode={pickerMode}
-        onConfirm={handleConfirm}
-        onCancel={hidePicker}
-        display={inline ? 'inline' : undefined}
-      />
     </View>
   );
 };
