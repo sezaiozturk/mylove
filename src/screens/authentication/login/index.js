@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {loginSchema} from '../validationSchema';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
@@ -15,17 +16,34 @@ const Login = ({navigation}) => {
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
 
+  const accountControl = async currentUser => {
+    const response = await firestore()
+      .collection('User')
+      .doc(currentUser.uid)
+      .get();
+    //console.log(response);
+    if (response._data === undefined) {
+      navigation.navigate('ProfileScreen');
+    } else {
+      if (response._data.matchId === undefined) {
+        //initial match screen
+        navigation.navigate('MatchScreen');
+      } else {
+        //initial homeTab screen
+        navigation.navigate('HomeTab');
+      }
+    }
+  };
+
   const handleLogin = async ({email, password}) => {
     setLoad(true);
     try {
-      AsyncStorage.getItem(email).then(result => {
-        result === 1
-          ? navigation.navigate('HomeTab')
-          : navigation.navigate('ProfileScreen');
-      });
-      await auth().signInWithEmailAndPassword(email, password);
-
-      setLoad(false);
+      const isLogin = await auth().signInWithEmailAndPassword(email, password);
+      if (isLogin) {
+        const currentUser = auth().currentUser;
+        accountControl(currentUser);
+        setLoad(false);
+      }
     } catch (e) {
       console.log(e);
       setLoad(false);

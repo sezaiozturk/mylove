@@ -4,8 +4,8 @@ const style = ({colors}) => {
   return StyleSheet.create({
     container: {
       backgroundColor: colors.secondary,
-      justifyContent: 'space-between',
       flex: 1,
+      backgroundColor: 'green',
     },
     titleContainer: {
       backgroundColor: colors.primary,
@@ -19,33 +19,38 @@ const style = ({colors}) => {
     },
     formContainer: {
       backgroundColor: colors.secondary,
-      padding: 20,
-      marginVertical: 20,
+      justifyContent: 'flex-start',
+      paddingHorizontal: 20,
       flex: 1,
-      justifyContent: 'space-between',
     },
     photoContainer: {
       alignItems: 'center',
     },
     photo: {
-      width: 200,
-      height: 200,
-      aspectRatio: 1,
-      objectFit: 'cover',
-      borderRadius: 100,
-      borderWidth: 2,
       borderColor: colors.primary,
       justifyContent: 'center',
       alignItems: 'center',
+      objectFit: 'cover',
+      borderRadius: 100,
+      aspectRatio: 1,
+      borderWidth: 2,
+      height: 175,
+      width: 175,
+      margin: 10,
     },
     inputContainer: {
-      marginBottom: 30,
-      gap: 20,
+      marginBottom: 40,
+      gap: 15,
+    },
+    genderContainer: {
+      justifyContent: 'center',
+      flexDirection: 'row',
+      gap: 50,
     },
     calendarContainer: {
       justifyContent: 'space-between',
-      flexDirection: 'row',
       alignItems: 'flex-end',
+      flexDirection: 'row',
       gap: 10,
     },
     calendar: {
@@ -57,17 +62,16 @@ const style = ({colors}) => {
     bottomContainer: {
       justifyContent: 'center',
       alignItems: 'center',
-      gap: 30,
     },
     text: {
       fontFamily: 'Kalam-Regular',
       color: colors.gray100,
-      fontSize: 15,
       textAlign: 'center',
+      fontSize: 15,
     },
     link: {
-      color: colors.primary,
       textDecorationLine: 'underline',
+      color: colors.primary,
     },
   });
 };

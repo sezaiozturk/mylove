@@ -9,7 +9,7 @@ const Tasks = ({navigation}) => {
   useEffect(() => {
     {
       AsyncStorage.getItem(auth().currentUser.email).then(res =>
-        console.log(res),
+        console.log('000' + res),
       );
     }
   }, []);

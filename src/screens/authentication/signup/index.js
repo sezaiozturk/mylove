@@ -20,7 +20,7 @@ const Signup = ({navigation}) => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        AsyncStorage.setItem(values.email, 0);
+        AsyncStorage.setItem(email, 0);
         navigation.navigate('LoginScreen');
         setLoad(false);
       })
@@ -105,7 +105,7 @@ const Signup = ({navigation}) => {
             <Button
               title={'Login'}
               variant="ghost"
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('LoginScreen')}
             />
           </View>
         </View>

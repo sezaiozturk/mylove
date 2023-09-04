@@ -21,32 +21,80 @@ const Match = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
 
-  const [copiedText, setCopiedText] = useState('burası');
   const [page, setPage] = useState(true);
-  const uid = 'DFH345HKJHB533443JKJ';
+  const currentUid = auth().currentUser.uid;
 
   const toggleScanner = () => {
     setPage(!page);
   };
 
+  const qrControl = async data => {
+    if (data.length == 28 && data != currentUid) {
+      const user = await firestore().collection('User').doc(data).get();
+      return user._data === undefined ? 'kullanıcı bulunamadı' : true;
+    } else {
+      return 'geçersiz qr';
+    }
+  };
+  const match = partnerUid => {
+    const matchId = currentUid.substring(0, 14) + partnerUid.substring(14, 28);
+    try {
+      firestore()
+        .collection('Match')
+        .doc(matchId)
+        .set({
+          uid1: currentUid,
+          uid2: partnerUid,
+        })
+        .then(() => {
+          firestore()
+            .collection('User')
+            .doc(currentUid)
+            .update({
+              matchId,
+            })
+            .then(() => {
+              firestore()
+                .collection('User')
+                .doc(partnerUid)
+                .update({
+                  matchId,
+                })
+                .then(() => {
+                  navigation.navigate('HomeTab');
+                });
+            });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReadQr = async ({data}) => {
+    let response = await qrControl(data);
+    if (response === true) {
+      match(data);
+      toggleScanner();
+    } else {
+      console.log(response);
+    }
+  };
   return page ? (
     <View style={classes.container}>
       <View style={classes.qrContainer}>
         <View style={classes.qr}>
           <QRCode
-            value="Sokok ibrahim"
+            value={currentUid}
             color={colors.primary}
             size={200}
             backgroundColor={colors.secondary}
           />
         </View>
         <View style={classes.row}>
-          <Text style={[classes.uid, typography.title2]}>{uid}</Text>
+          <Text style={[classes.uid, typography.title2]}>{currentUid}</Text>
           <TouchableOpacity
-            onPress={async () => {
-              Clipboard.setString(uid);
-              const text = await Clipboard.getString();
-              setCopiedText(text);
+            onPress={() => {
+              Clipboard.setString(currentUid);
             }}>
             <Text>
               <Icon name="content-copy" size={30} color={colors.primary} />
@@ -95,7 +143,7 @@ const Match = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <QRCodeScanner
-        onRead={e => console.log(e.data)}
+        onRead={handleReadQr}
         flashMode={RNCamera.Constants.FlashMode.torch}
         reactivate={true}
         reactivateTimeout={1000}

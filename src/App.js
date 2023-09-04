@@ -3,7 +3,6 @@ import {useDispatch} from 'react-redux';
 import React, {useEffect, useState} from 'react';
 import {changeTheme} from './redux/theme/themeSlice';
 import {NavigationContainer} from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
 import Router from './router';
@@ -16,7 +15,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    SplashScreen.hide();
     dispatch(changeTheme(currentTheme));
   }, [currentTheme]);
 

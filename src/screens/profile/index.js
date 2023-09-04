@@ -1,14 +1,12 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import {Input, Button} from '../../components';
+import {Input, Button, RadioButton} from '../../components';
 import {Formik} from 'formik';
 import style from './stylesheet';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {nameSchema} from '../authentication/validationSchema';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -19,11 +17,13 @@ const Profile = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState('');
-
   const [pickerMode, setPickerMode] = useState(null);
   const [inline, setInline] = useState(false);
+  const currentUser = auth().currentUser.uid;
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [genderId, setGenderId] = useState(1);
+  let downloadUrl = null;
 
   const showDatePicker = () => {
     setPickerMode('date');
@@ -48,43 +48,32 @@ const Profile = ({navigation}) => {
     });
   };
 
-  async function handleSave({userName, fullName, accounts, biography}) {
-    /*const referance = storage().ref('profile/' + auth().currentUser.uid);
+  async function handleSave({name}) {
+    setLoad(true);
+    const referance = storage().ref('profile/' + currentUser);
     try {
       if (photoUrl != null) {
         await referance.putFile(photoUrl);
         downloadUrl = await referance.getDownloadURL();
       }
-
-      /*firestore()
-        .collection('Members')
-        .doc(auth().currentUser.uid)
+      firestore()
+        .collection('User')
+        .doc(currentUser)
         .set({
-          uid,
-          userName,
-          fullName,
-          selectedDepartment,
-          selectedCommunities,
-          accounts,
-          biography,
+          uid: currentUser,
           downloadUrl,
+          genderId,
+          name,
+          dateOfBirth,
         })
         .then(() => {
-          firestore()
-            .collection('Friends')
-            .doc(auth().currentUser.uid)
-            .set({
-              friendsUid: [],
-              requestUid: [],
-            })
-            .then(() => {
-              navigation.navigate('MemberTab');
-            });
+          navigation.navigate('MatchScreen');
+          setLoad(false);
         });
     } catch (error) {
       console.log(error);
+      setLoad(false);
     }
-    */
   }
 
   return (
@@ -103,7 +92,7 @@ const Profile = ({navigation}) => {
               <Text>
                 <Icon
                   name={'add-photo-alternate'}
-                  size={50}
+                  size={40}
                   color={colors.primary}
                 />
               </Text>
@@ -117,15 +106,26 @@ const Profile = ({navigation}) => {
           }}
           validationSchema={nameSchema}
           onSubmit={handleSave}>
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            errors,
-          }) => (
+          {({handleSubmit, handleChange, values, touched, errors}) => (
             <View style={classes.inputContainer}>
+              <View style={classes.genderContainer}>
+                <RadioButton
+                  id={1}
+                  title="Kız"
+                  onPress={() => {
+                    setGenderId(1);
+                  }}
+                  active={genderId}
+                />
+                <RadioButton
+                  id={2}
+                  title="Erkek"
+                  onPress={() => {
+                    setGenderId(2);
+                  }}
+                  active={genderId}
+                />
+              </View>
               <Input
                 title="Name"
                 value={values.name}
@@ -164,11 +164,7 @@ const Profile = ({navigation}) => {
                 onConfirm={date => {
                   hidePicker();
                   handleChange('dateOfBirth');
-                  setDateOfBirth(
-                    `${date.getDate()} / ${
-                      date.getMonth() + 1
-                    } / ${date.getFullYear()}`,
-                  );
+                  setDateOfBirth(date);
                 }}
                 onCancel={hidePicker}
                 display={inline ? 'inline' : undefined}
@@ -195,3 +191,7 @@ const Profile = ({navigation}) => {
 };
 
 export default Profile;
+
+/*`${date.getDate()} / ${
+                      date.getMonth() + 1
+                    } / ${date.getFullYear()}`,*/

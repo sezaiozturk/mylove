@@ -9,8 +9,8 @@ const style = ({colors}) => {
     },
     qrContainer: {
       justifyContent: 'center',
-      paddingTop: 50,
-      gap: 50,
+      paddingTop: 40,
+      gap: 40,
     },
     qr: {
       alignItems: 'center',
