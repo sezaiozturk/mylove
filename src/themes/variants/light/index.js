@@ -29,6 +29,7 @@ const colors = {
   gray: 'red',
   gray100: '#2F3032',
   gray200: '#181B1D',
+  indicator: '#FFFFFF',
 };
 const light = {
   key: 'light',

@@ -1,7 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ForgotPassword, Login, Match, Profile, Signup, Tasks} from '../screens';
+import {
+  Counter,
+  Day,
+  ForgotPassword,
+  Login,
+  Match,
+  Profile,
+  Signup,
+  Tasks,
+} from '../screens';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SplashScreen from 'react-native-splash-screen';
@@ -12,8 +21,9 @@ const Stack = createNativeStackNavigator();
 const HomeTab = () => {
   return (
     <Tab.Navigator>
+      <Tab.Screen name="DayScreen" component={Day} />
+      <Tab.Screen name="CounterScreen" component={Counter} />
       <Tab.Screen name="TasksScreen" component={Tasks} />
-      <Tab.Screen name="TasksScreen2" component={Tasks} />
     </Tab.Navigator>
   );
 };
@@ -31,7 +41,6 @@ const Router = () => {
         .doc(currentUser.uid)
         .get();
       SplashScreen.hide();
-      console.log(response);
       if (response._data === undefined) {
         //initial profile screen
         setInitial('ProfileScreen');

@@ -17,7 +17,6 @@ const typography = {
   },
   text1: {
     fontFamily: 'poppins-regular',
-    lineHeight: '4rem',
     fontSize: 21,
   },
 };
@@ -29,6 +28,7 @@ const colors = {
   gray: 'red',
   gray100: '#BDC4CB',
   gray200: '#EFEFEF',
+  indicator: '#253237',
 };
 const dark = {
   key: 'dark',

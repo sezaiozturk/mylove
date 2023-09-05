@@ -1,5 +1,13 @@
 import {StyleSheet} from 'react-native';
 
-export default StyleSheet.create({
-  container: {},
-});
+const style = () => {
+  return StyleSheet.create({
+    container: {},
+    heart: {
+      width: 50,
+      height: 50,
+    },
+  });
+};
+
+export default style;
