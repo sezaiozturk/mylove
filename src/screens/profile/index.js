@@ -11,27 +11,19 @@ import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import useCalendar from '../../hooks/useCalendar/useCalendar';
 
 const Profile = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
-  const [pickerMode, setPickerMode] = useState(null);
-  const [inline, setInline] = useState(false);
   const currentUser = auth().currentUser.uid;
   const [photoUrl, setPhotoUrl] = useState(null);
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [genderId, setGenderId] = useState(1);
   let downloadUrl = null;
-
-  const showDatePicker = () => {
-    setPickerMode('date');
-  };
-
-  const hidePicker = () => {
-    setPickerMode(null);
-  };
+  const {showDatePicker, hidePicker, pickerMode, inline} = useCalendar();
 
   const handleConfirm = date => {
     hidePicker();

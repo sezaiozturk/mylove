@@ -14,6 +14,15 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SplashScreen from 'react-native-splash-screen';
+import {useDispatch} from 'react-redux';
+import {
+  setMatchId,
+  setUser1Id,
+  setUser2Id,
+  setUser1Info,
+  setUser2Info,
+  setMatchInfo,
+} from '../redux/users/usersSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,6 +39,7 @@ const HomeTab = () => {
 const Router = () => {
   const [initial, setInitial] = useState(null);
   const currentUser = auth().currentUser;
+  const dispatch = useDispatch();
   useEffect(() => {
     accountControl(currentUser);
   }, []);
@@ -50,7 +60,9 @@ const Router = () => {
           setInitial('MatchScreen');
         } else {
           //initial homeTab screen
-          setInitial('HomeTab');
+          getInfo(response._data);
+          //herşey tamam
+          //tüm veriler=response._data
         }
       }
     } else {
@@ -58,6 +70,22 @@ const Router = () => {
       setInitial('LoginScreen');
       SplashScreen.hide();
     }
+  };
+  const getInfo = async data => {
+    let response;
+    response = await firestore().collection('Match').doc(data.matchId).get();
+    const match = response._data;
+    const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
+
+    response = await firestore().collection('User').doc(user2Id).get();
+
+    //dispatch(setMatchId(data.matchId));
+    //dispatch(setUser1Id(currentUser.uid));
+    //dispatch(setUser2Id(user2Id));
+    dispatch(setMatchInfo(match));
+    dispatch(setUser1Info(data));
+    dispatch(setUser2Info(response._data));
+    setInitial('HomeTab');
   };
 
   return initial != null ? (

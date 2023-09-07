@@ -6,44 +6,18 @@ import {useSelector} from 'react-redux';
 import style from './stylesheet';
 import Svg, {Defs, Mask, Path} from 'react-native-svg';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import useCalendar from '../../hooks/useCalendar/useCalendar';
 
 const Counter = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors});
+  const {days, hours, minutes, seconds, full} = useCalendar(
+    new Date('2023-09-5 12:41:25').getTime(),
+    new Date('2023-09-12 12:45:25').getTime(),
+  );
 
-  const [days, setDays] = useState(null);
-  const [hours, setHours] = useState(null);
-  const [minutes, setMinutes] = useState(null);
-  const [seconds, setSeconds] = useState(null);
-  const full = 6;
-
-  const startTimer = () => {
-    let countDownDate = new Date('2023-09-10 19:56:25').getTime();
-    const interval = setInterval(() => {
-      let now = new Date().getTime();
-      let distance = countDownDate - now;
-
-      let d = Math.floor(distance / (1000 * 60 * 60 * 24));
-      let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      let s = Math.floor((distance % (1000 * 60)) / 1000);
-
-      if (distance < 0) {
-        clearInterval(interval);
-        console.log('finish');
-      } else {
-        setDays(d);
-        setHours(h);
-        setMinutes(m);
-        setSeconds(s);
-      }
-    }, 1000);
-  };
-
-  useEffect(() => {
-    startTimer();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <View style={classes.container}>

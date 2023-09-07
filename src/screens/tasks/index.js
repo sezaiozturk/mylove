@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from '../../components';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
 
 const Tasks = ({navigation}) => {
   //const classes = style();
@@ -15,7 +16,6 @@ const Tasks = ({navigation}) => {
   }, []);
   return (
     <View>
-      <Text style={{color: 'black', fontSize: 30}}></Text>
       <Button
         title="çık"
         onPress={() => {
