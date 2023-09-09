@@ -19,10 +19,13 @@ const Day = ({navigation}) => {
   const match = useSelector(({users}) => users.matchInfo);
   const nowTime = new Date().getTime();
   const [startDay, setStartDay] = useState(match.startDate);
-  const {showDatePicker, hidePicker, pickerMode, inline, full} = useCalendar(
-    startDay,
-    nowTime,
-  );
+  const {showDatePicker, hidePicker, pickerMode, inline, days, distanceDay} =
+    useCalendar();
+
+  useEffect(() => {
+    startDay != undefined ? setStartDay(distanceDay(startDay, nowTime)) : null;
+  }, []);
+
   const saveStartDate = async startDate => {
     try {
       firestore()
@@ -46,49 +49,42 @@ const Day = ({navigation}) => {
           <Icon name="calendar-month" size={30} color={colors.primary} />
         </Text>
       </TouchableOpacity>
+
       <View style={classes.photoContainer}>
-        <MaskedView
-          style={classes.maskedContainer}
-          maskElement={
-            <View style={classes.masked}>
-              <Image
-                source={require('../../../assets/icons/heart.png')}
-                style={classes.heart}
-              />
-            </View>
-          }>
+        <View>
           <Image
-            source={{
-              uri: user1.downloadUrl,
+            source={require('../../../assets/icons/heartLight.png')}
+            style={{
+              width: 200,
+              height: 180,
+              position: 'relative',
             }}
-            style={classes.photo}
           />
-        </MaskedView>
-        <MaskedView
-          style={classes.maskedContainer}
-          maskElement={
-            <View style={classes.masked}>
-              <Image
-                source={require('../../../assets/icons/heart.png')}
-                style={classes.heart}
-              />
-            </View>
-          }>
           <Image
-            source={{
-              uri: user2.downloadUrl,
+            source={{uri: user2.downloadUrl}}
+            style={{
+              width: 200,
+              height: 180,
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: -1,
             }}
-            style={classes.photo}
           />
-        </MaskedView>
+        </View>
       </View>
+
       <View style={classes.dayContainer}>
         <Text
           style={[
             classes.text,
             typography.header2,
           ]}>{`${user1.name} & ${user2.name}`}</Text>
-        <Text style={classes.day}>{full}</Text>
+        <Text style={classes.day}>
+          {startDay === undefined ? days : startDay}
+        </Text>
         <Text style={[classes.text, typography.header2]}>
           Gündür Birlikteyiz...
         </Text>
@@ -104,7 +100,7 @@ const Day = ({navigation}) => {
         mode={pickerMode}
         onConfirm={date => {
           hidePicker();
-          setStartDay(date.getTime());
+          distanceDay(date.getTime(), nowTime);
           saveStartDate(date.getTime());
         }}
         onCancel={hidePicker}
