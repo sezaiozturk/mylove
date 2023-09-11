@@ -30,9 +30,9 @@ const Stack = createNativeStackNavigator();
 const HomeTab = () => {
   return (
     <Tab.Navigator>
+      <Tab.Screen name="TasksScreen" component={Tasks} />
       <Tab.Screen name="DayScreen" component={Day} />
       <Tab.Screen name="CounterScreen" component={Counter} />
-      <Tab.Screen name="TasksScreen" component={Tasks} />
     </Tab.Navigator>
   );
 };

@@ -4,6 +4,7 @@ const style = ({colors}) => {
   return StyleSheet.create({
     container: {
       gap: 5,
+      backgroundColor: 'yellow',
     },
     inputContainer: {
       justifyContent: 'space-between',
@@ -23,6 +24,7 @@ const style = ({colors}) => {
       color: colors.text,
       padding: 0,
       flex: 1,
+      backgroundColor: 'red',
     },
     error: {
       color: colors.gray200,

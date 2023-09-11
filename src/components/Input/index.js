@@ -33,8 +33,11 @@ const Input = ({
           placeholderTextColor={colors.gray100}
           secureTextEntry={secureTextEntry}
           editable={editable}
+          multiline={true}
         />
-        <TouchableOpacity onPress={() => null}>
+        <TouchableOpacity
+          onPress={() => null}
+          style={{backgroundColor: 'black'}}>
           <Text>
             <Icon name="close" size={20} color={colors.primary} />
           </Text>
