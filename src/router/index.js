@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   Counter,
   Day,
@@ -14,7 +15,9 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SplashScreen from 'react-native-splash-screen';
-import {useDispatch} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import {Drawer} from '../components';
 import {
   setMatchId,
   setUser1Id,
@@ -23,17 +26,62 @@ import {
   setUser2Info,
   setMatchInfo,
 } from '../redux/users/usersSlice';
-
+import {Text} from 'react-native-svg';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const DrawerNav = createDrawerNavigator();
 
 const HomeTab = () => {
+  const colors = useSelector(({theme}) => theme.colors);
+
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="TasksScreen" component={Tasks} />
-      <Tab.Screen name="DayScreen" component={Day} />
-      <Tab.Screen name="CounterScreen" component={Counter} />
-    </Tab.Navigator>
+    <DrawerNav.Navigator
+      drawerContent={props => <Drawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerActiveBackgroundColor: colors.primary,
+        drawerActiveTintColor: colors.title,
+        drawerInactiveTintColor: colors.text,
+        drawerLabelStyle: {
+          fontFamily: 'Kalam-Bold',
+          marginLeft: -20,
+          fontSize: 15,
+        },
+      }}>
+      <DrawerNav.Screen
+        name="TasksScreen"
+        component={Tasks}
+        options={{
+          drawerIcon: ({color}) => (
+            <Text>
+              <Icon name={'task-alt'} size={22} color={color} />
+            </Text>
+          ),
+        }}
+      />
+      <DrawerNav.Screen
+        name="DayScreen"
+        component={Day}
+        options={{
+          drawerIcon: ({color}) => (
+            <Text>
+              <Icon name={'today'} size={22} color={color} />
+            </Text>
+          ),
+        }}
+      />
+      <DrawerNav.Screen
+        name="CounterScreen"
+        component={Counter}
+        options={{
+          drawerIcon: ({color}) => (
+            <Text>
+              <Icon name={'access-time'} size={22} color={color} />
+            </Text>
+          ),
+        }}
+      />
+    </DrawerNav.Navigator>
   );
 };
 const Router = () => {

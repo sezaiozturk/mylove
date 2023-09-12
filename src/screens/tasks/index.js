@@ -1,15 +1,6 @@
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  Modal,
-  TextInput,
-} from 'react-native';
+import {View, FlatList, TouchableOpacity, Text, Modal} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, Input, OptionsMenu, Todo} from '../../components';
-import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import styles from './stylesheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,44 +16,14 @@ const Tasks = ({navigation}) => {
   const [infoToggle, setInfoToggle] = useState(false);
   const [inputToggle, setInputToggle] = useState(false);
   const [optionsToggle, setOptionsToggle] = useState(false);
+  const [isRender, setisRender] = useState(false);
+  const [task, setTask] = useState([]);
+  const [load, setLoad] = useState(false);
+  const [todo, setTodo] = useState('');
   const [selectedTask, setSelectedTask] = useState({
     task: 'dfsdf',
     status: 'yes',
   });
-  const [isRender, setisRender] = useState(false);
-  const [task, setTask] = useState([]);
-  const [load, setLoad] = useState(false);
-
-  const [todo, setTodo] = useState('');
-
-  const saveTaskStatus = status => {
-    setOptionsToggle(!optionsToggle);
-    try {
-      if (status == 'delete') {
-        firestore().collection('Tasks').doc(selectedTask.id).delete();
-      } else {
-        firestore()
-          .collection('Tasks')
-          .doc(selectedTask.id)
-          .update({
-            status,
-          })
-          .then(() => {
-            const newData = task.map(item => {
-              if (item.uuid == selectedTask.id) {
-                item.status = status;
-                return item;
-              }
-              return item;
-            });
-            setTask(newData);
-            setisRender(!isRender);
-          });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const info = [
     {
       id: 0,
@@ -166,14 +127,36 @@ const Tasks = ({navigation}) => {
         setTask(x);
       });
   };
-
-  useEffect(() => {
-    {
-      AsyncStorage.getItem(auth().currentUser.email).then(res =>
-        console.log('000' + res),
-      );
-      getTodo();
+  const saveTaskStatus = status => {
+    setOptionsToggle(!optionsToggle);
+    try {
+      if (status == 'delete') {
+        firestore().collection('Tasks').doc(selectedTask.id).delete();
+      } else {
+        firestore()
+          .collection('Tasks')
+          .doc(selectedTask.id)
+          .update({
+            status,
+          })
+          .then(() => {
+            const newData = task.map(item => {
+              if (item.uuid == selectedTask.id) {
+                item.status = status;
+                return item;
+              }
+              return item;
+            });
+            setTask(newData);
+            setisRender(!isRender);
+          });
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
+  useEffect(() => {
+    getTodo();
   }, []);
   return (
     <View style={classes.container}>
@@ -198,11 +181,9 @@ const Tasks = ({navigation}) => {
           paddingTop: 5,
         }}
       />
-
       <TouchableOpacity
         style={classes.float}
         onPress={() => {
-          //setInfoToggle(!infoToggle);
           setInputToggle(!inputToggle);
         }}>
         <Text>
@@ -210,14 +191,7 @@ const Tasks = ({navigation}) => {
         </Text>
       </TouchableOpacity>
       {/*This modal is info toggle */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={infoToggle}
-        onRequestClose={() => {
-          //Alert.alert('Modal has been closed.');
-          setInfoToggle(!infoToggle);
-        }}>
+      <Modal animationType="fade" transparent={true} visible={infoToggle}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setInfoToggle(!infoToggle)}
@@ -231,14 +205,7 @@ const Tasks = ({navigation}) => {
         </TouchableOpacity>
       </Modal>
       {/*This modal is input toggle */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={inputToggle}
-        onRequestClose={() => {
-          //Alert.alert('Modal has been closed.');
-          //setInputToggle(!inputToggle);
-        }}>
+      <Modal animationType="fade" transparent={true} visible={inputToggle}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setInputToggle(!inputToggle)}
@@ -253,14 +220,7 @@ const Tasks = ({navigation}) => {
         </TouchableOpacity>
       </Modal>
       {/*This modal is options toggle */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={optionsToggle}
-        onRequestClose={() => {
-          //Alert.alert('Modal has been closed.');
-          //setInputToggle(!inputToggle);
-        }}>
+      <Modal animationType="fade" transparent={true} visible={optionsToggle}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setOptionsToggle(!optionsToggle)}
