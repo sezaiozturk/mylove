@@ -1,6 +1,5 @@
 import {View, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
-
 import {useSelector} from 'react-redux';
 import styles from './stylesheet';
 

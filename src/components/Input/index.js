@@ -14,6 +14,7 @@ const Input = ({
   errors,
   secureTextEntry,
   editable,
+  multiline = false,
 }) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
@@ -33,11 +34,9 @@ const Input = ({
           placeholderTextColor={colors.gray100}
           secureTextEntry={secureTextEntry}
           editable={editable}
-          multiline={true}
+          multiline={multiline}
         />
-        <TouchableOpacity
-          onPress={() => null}
-          style={{backgroundColor: 'black'}}>
+        <TouchableOpacity onPress={() => null}>
           <Text>
             <Icon name="close" size={20} color={colors.primary} />
           </Text>

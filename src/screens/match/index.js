@@ -43,6 +43,7 @@ const Match = ({navigation}) => {
         .collection('Match')
         .doc(matchId)
         .set({
+          matchId,
           uid1: currentUid,
           uid2: partnerUid,
         })

@@ -1,12 +1,10 @@
 import {
   View,
   FlatList,
-  Touchable,
   TouchableOpacity,
   Text,
   Modal,
   TextInput,
-  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, Input, OptionsMenu, Todo} from '../../components';
@@ -15,15 +13,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import styles from './stylesheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {randomUUID} from '../../utils';
+import firestore from '@react-native-firebase/firestore';
 
 const Tasks = ({navigation}) => {
-  const task = [{task: 'sinema git'}, {task: 'tiyatro'}, {task: 'yemek ye'}];
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
+  const match = useSelector(({users}) => users.matchInfo);
   const [infoToggle, setInfoToggle] = useState(false);
   const [inputToggle, setInputToggle] = useState(false);
   const [optionsToggle, setOptionsToggle] = useState(false);
+  const [selectedTask, setSelectedTask] = useState({
+    task: 'dfsdf',
+    status: 'yes',
+  });
+  const [isRender, setisRender] = useState(false);
+  const [task, setTask] = useState([]);
+  const [load, setLoad] = useState(false);
+
+  const [todo, setTodo] = useState('');
+
+  const saveTaskStatus = optionsId => {
+    setOptionsToggle(!optionsToggle);
+
+    /* const newData = veri.map(item => {
+      if (item.id == selectedTask.id) {
+        item.status = 'yes';
+        return item;
+      }
+      return item;
+    });
+    setVeri(newData);
+    setisRender(!isRender);*/
+  };
   const info = [
     {
       id: 0,
@@ -46,24 +69,7 @@ const Tasks = ({navigation}) => {
       status: 'complete',
     },
   ];
-  const DATA = [
-    {
-      title: 'kahvaltı yap',
-      status: 'yes',
-    },
-    {
-      title: 'kahvaltı yap',
-      status: 'no',
-    },
-    {
-      title: 'kahvaltı yap',
-      status: 'complete',
-    },
-    {
-      title: 'kahvaltı yap',
-      status: 'complete',
-    },
-  ];
+
   const options = [
     {
       title: 'Tamam:)',
@@ -82,20 +88,76 @@ const Tasks = ({navigation}) => {
       id: 3,
     },
   ];
+  const saveTodo = async () => {
+    const uuid = randomUUID();
+    if (todo != '') {
+      try {
+        setLoad(true);
+        firestore()
+          .collection('Tasks')
+          .doc(uuid)
+          .set({
+            uuid,
+            task: todo,
+            matchId: match.matchId,
+            status: 'wait',
+            date: new Date(),
+          })
+          .then(() => {
+            setInputToggle(!inputToggle);
+            setLoad(false);
+          });
+      } catch (error) {
+        console.log(error);
+        setLoad(false);
+      }
+    } else {
+      console.log('boş olamaz');
+    }
+  };
+  const getTodo = () => {
+    firestore()
+      .collection('Tasks')
+      .onSnapshot(querySnapshot => {
+        let x = [];
+        querySnapshot.forEach(async documentSnapshot => {
+          const obj = {
+            ...documentSnapshot.data(),
+          };
+          x.push(obj);
+        });
+        x.sort(function (a, b) {
+          return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
+        });
+        setTask(x);
+      });
+  };
 
   useEffect(() => {
     {
       AsyncStorage.getItem(auth().currentUser.email).then(res =>
         console.log('000' + res),
       );
+      getTodo();
     }
   }, []);
   return (
     <View style={classes.container}>
       <FlatList
-        data={DATA}
-        renderItem={({item}) => <Todo task={item.title} status={item.status} />}
-        keyExtractor={item => item.id}
+        extraData={isRender}
+        data={task}
+        renderItem={({item}) => (
+          <Todo
+            id={item.uuid}
+            task={item.task}
+            status={item.status}
+            handleTask={task => {
+              setOptionsToggle(!optionsToggle);
+              setSelectedTask(task);
+            }}
+          />
+        )}
+        keyExtractor={item => item.uuid}
         style={{
           marginVertical: 10,
           paddingTop: 5,
@@ -106,13 +168,13 @@ const Tasks = ({navigation}) => {
         style={classes.float}
         onPress={() => {
           //setInfoToggle(!infoToggle);
-          //setInputToggle(!inputToggle);
-          setOptionsToggle(!optionsToggle);
+          setInputToggle(!inputToggle);
         }}>
         <Text>
           <Icon name="plus" size={25} color={colors.secondary} />
         </Text>
       </TouchableOpacity>
+      {/*This modal is info toggle */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -133,33 +195,29 @@ const Tasks = ({navigation}) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      {/*This modal is input toggle */}
       <Modal
         animationType="fade"
         transparent={true}
         visible={inputToggle}
         onRequestClose={() => {
           //Alert.alert('Modal has been closed.');
-          setInputToggle(!inputToggle);
+          //setInputToggle(!inputToggle);
         }}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setInputToggle(!inputToggle)}
           style={classes.inputContainer}>
           <View style={classes.inputDialog}>
-            <TextInput
-              style={{
-                borderWidth: 2,
-                color: 'black',
-                borderColor: 'red',
-                textAlign: 'left',
-              }}
-              multiline={true}
+            <Input
+              placeHolder={'İsteklerinizi girin...'}
+              onChangeText={text => setTodo(text)}
             />
-            <Input placeHolder={'sezai'} />
-            <Button title="Kaydet" />
+            <Button title="Kaydet" onPress={saveTodo} loading={load} />
           </View>
         </TouchableOpacity>
       </Modal>
+      {/*This modal is options toggle */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -172,8 +230,8 @@ const Tasks = ({navigation}) => {
           activeOpacity={1}
           onPress={() => setOptionsToggle(!optionsToggle)}
           style={classes.optionsContainer}>
-          <Todo task={'denmee'} />
-          <OptionsMenu menuItems={options} handleItem={id => console.log(id)} />
+          <Todo task={selectedTask.task} status={selectedTask.status} />
+          <OptionsMenu menuItems={options} handleItem={saveTaskStatus} />
         </TouchableOpacity>
       </Modal>
     </View>
@@ -181,13 +239,3 @@ const Tasks = ({navigation}) => {
 };
 
 export default Tasks;
-
-/**
- *  <View
-        style={{
-          width: 400,
-          height: 400,
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          position: 'absolute',
-        }}></View>
- */
