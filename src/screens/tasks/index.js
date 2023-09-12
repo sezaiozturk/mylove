@@ -21,6 +21,7 @@ const Tasks = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
   const match = useSelector(({users}) => users.matchInfo);
+  const user1 = useSelector(({users}) => users.user1Info);
   const [infoToggle, setInfoToggle] = useState(false);
   const [inputToggle, setInputToggle] = useState(false);
   const [optionsToggle, setOptionsToggle] = useState(false);
@@ -34,18 +35,33 @@ const Tasks = ({navigation}) => {
 
   const [todo, setTodo] = useState('');
 
-  const saveTaskStatus = optionsId => {
+  const saveTaskStatus = status => {
     setOptionsToggle(!optionsToggle);
-
-    /* const newData = veri.map(item => {
-      if (item.id == selectedTask.id) {
-        item.status = 'yes';
-        return item;
+    try {
+      if (status == 'delete') {
+        firestore().collection('Tasks').doc(selectedTask.id).delete();
+      } else {
+        firestore()
+          .collection('Tasks')
+          .doc(selectedTask.id)
+          .update({
+            status,
+          })
+          .then(() => {
+            const newData = task.map(item => {
+              if (item.uuid == selectedTask.id) {
+                item.status = status;
+                return item;
+              }
+              return item;
+            });
+            setTask(newData);
+            setisRender(!isRender);
+          });
       }
-      return item;
-    });
-    setVeri(newData);
-    setisRender(!isRender);*/
+    } catch (error) {
+      console.log(error);
+    }
   };
   const info = [
     {
@@ -72,20 +88,36 @@ const Tasks = ({navigation}) => {
 
   const options = [
     {
-      title: 'Tamam:)',
       id: 0,
+      title: 'Tamam:)',
+      status: 'yes',
     },
     {
-      title: 'Hayırr, olmaz !',
       id: 1,
+      title: 'Hayırr, olmaz !',
+      status: 'no',
     },
     {
-      title: 'Sil çabuk...',
       id: 2,
+      title: 'Sil çabuk...',
+      status: 'delete',
     },
     {
-      title: 'Bu anı yaşadık',
       id: 3,
+      title: 'Bu anı yaşadık',
+      status: 'complete',
+    },
+  ];
+  const options2 = [
+    {
+      id: 2,
+      title: 'Sil çabuk...',
+      status: 'delete',
+    },
+    {
+      id: 3,
+      title: 'Bu anı yaşadık',
+      status: 'complete',
     },
   ];
   const saveTodo = async () => {
@@ -97,9 +129,10 @@ const Tasks = ({navigation}) => {
           .collection('Tasks')
           .doc(uuid)
           .set({
-            uuid,
-            task: todo,
             matchId: match.matchId,
+            uuid,
+            userId: user1.uid,
+            task: todo,
             status: 'wait',
             date: new Date(),
           })
@@ -118,6 +151,7 @@ const Tasks = ({navigation}) => {
   const getTodo = () => {
     firestore()
       .collection('Tasks')
+      .where('matchId', '==', match.matchId)
       .onSnapshot(querySnapshot => {
         let x = [];
         querySnapshot.forEach(async documentSnapshot => {
@@ -151,6 +185,7 @@ const Tasks = ({navigation}) => {
             id={item.uuid}
             task={item.task}
             status={item.status}
+            userId={item.userId}
             handleTask={task => {
               setOptionsToggle(!optionsToggle);
               setSelectedTask(task);
@@ -231,7 +266,10 @@ const Tasks = ({navigation}) => {
           onPress={() => setOptionsToggle(!optionsToggle)}
           style={classes.optionsContainer}>
           <Todo task={selectedTask.task} status={selectedTask.status} />
-          <OptionsMenu menuItems={options} handleItem={saveTaskStatus} />
+          <OptionsMenu
+            menuItems={selectedTask.userId != user1.uid ? options : options2}
+            handleItem={saveTaskStatus}
+          />
         </TouchableOpacity>
       </Modal>
     </View>

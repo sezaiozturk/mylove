@@ -4,14 +4,14 @@ import {useSelector} from 'react-redux';
 import styles from './stylesheet';
 import React, {useState} from 'react';
 
-const Todo = ({id, task, status = 'wait', handleTask}) => {
+const Todo = ({id, task, status = 'wait', userId, handleTask}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
   return (
     <TouchableOpacity
       activeOpacity={1}
-      onLongPress={() => handleTask({id, task, status})}
+      onLongPress={() => handleTask({id, task, status, userId})}
       style={classes[status].container}>
       <Text style={[classes[status].task, typography.title2]}>{task}</Text>
     </TouchableOpacity>

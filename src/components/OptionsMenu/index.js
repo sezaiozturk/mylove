@@ -18,7 +18,7 @@ const OptionsMenu = ({menuItems, handleItem}) => {
             <View key={item.id}>
               <TouchableOpacity
                 onPress={() => {
-                  handleItem(item.id);
+                  handleItem(item.status);
                 }}>
                 <Text style={[classes.option, typography.title2]}>
                   {item.title}
@@ -36,7 +36,7 @@ const OptionsMenu = ({menuItems, handleItem}) => {
             borderBottomRightRadius: 20,
           }}
           onPress={() => {
-            handleItem(last.id);
+            handleItem(last.status);
           }}>
           <Text
             style={[classes.option, typography.title2, {color: colors.title}]}>
