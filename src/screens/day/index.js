@@ -1,6 +1,6 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Button} from '../../components';
+import {Button, TopBar} from '../../components';
 import auth from '@react-native-firebase/auth';
 import {useSelector} from 'react-redux';
 import style from './stylesheet';
@@ -44,12 +44,15 @@ const Day = ({navigation}) => {
 
   return (
     <View style={classes.container}>
-      <TouchableOpacity onPress={showDatePicker} style={classes.calendar}>
-        <Text>
-          <Icon name="calendar-month" size={30} color={colors.primary} />
-        </Text>
-      </TouchableOpacity>
-
+      <TopBar
+        title={'Kaç gündür beraberiz'}
+        leftName={'arrow-back'}
+        rightName={'calendar-month'}
+        leftIcon={() => {
+          navigation.navigate('TasksScreen');
+        }}
+        rightIcon={showDatePicker}
+      />
       <View style={classes.photoContainer}>
         <View>
           <Image

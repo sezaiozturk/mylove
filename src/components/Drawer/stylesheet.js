@@ -10,29 +10,29 @@ const style = ({colors}) => {
       flex: 1,
     },
     photo: {
-      height: 250,
-      width: 'auto',
       resizeMode: 'cover',
+      borderRadius: 5,
+      width: 'auto',
+      height: 250,
       margin: 5,
-      borderRadius: 20,
     },
     itemContainer: {
       backgroundColor: colors.secondary,
       paddingTop: 10,
     },
     footer: {
-      borderTopWidth: 1,
-      borderColor: colors.text,
       backgroundColor: colors.secondary,
+      borderColor: colors.text,
       flexDirection: 'row',
-      gap: 10,
       paddingHorizontal: 20,
       paddingVertical: 15,
+      borderTopWidth: 1,
+      gap: 10,
     },
     text: {
-      fontSize: 15,
       fontFamily: 'Kalam-Bold',
       color: colors.text,
+      fontSize: 15,
     },
   });
 };

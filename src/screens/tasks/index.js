@@ -1,6 +1,6 @@
 import {View, FlatList, TouchableOpacity, Text, Modal} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Button, Input, OptionsMenu, Todo} from '../../components';
+import {Button, Input, OptionsMenu, Todo, TopBar} from '../../components';
 import {useSelector} from 'react-redux';
 import styles from './stylesheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -160,6 +160,15 @@ const Tasks = ({navigation}) => {
   }, []);
   return (
     <View style={classes.container}>
+      <TopBar
+        title={'Yapılacaklar'}
+        leftName={'menu'}
+        rightName={'help-outline'}
+        leftIcon={() => {
+          navigation.openDrawer();
+        }}
+        rightIcon={() => setInfoToggle(true)}
+      />
       <FlatList
         extraData={isRender}
         data={task}

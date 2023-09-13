@@ -4,9 +4,11 @@ const style = ({colors}) => {
   return StyleSheet.create({
     container: {
       backgroundColor: colors.secondary,
+      flex: 1,
+    },
+    contentContainer: {
       alignItems: 'center',
       padding: 20,
-      flex: 1,
     },
     circle: {
       justifyContent: 'space-between',

@@ -9,6 +9,7 @@ const style = ({colors}) => {
     photoContainer: {
       justifyContent: 'center',
       flexDirection: 'row',
+      marginTop: 15,
     },
     maskedContainer: {
       flexDirection: 'row',

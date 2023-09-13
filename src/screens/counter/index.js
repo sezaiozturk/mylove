@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Button} from '../../components';
+import {Button, TopBar} from '../../components';
 import auth from '@react-native-firebase/auth';
 import {useSelector} from 'react-redux';
 import style from './stylesheet';
@@ -60,51 +60,59 @@ const Counter = ({navigation}) => {
 
   return (
     <View style={classes.container}>
-      <TouchableOpacity onPress={showDatePicker} style={classes.calendar}>
-        <Text>
-          <Icon name="calendar-month" size={30} color={colors.primary} />
-        </Text>
-      </TouchableOpacity>
-      <AnimatedCircularProgress
-        size={180}
-        width={8}
-        fill={fill}
-        tintColor={colors.primary}
-        onAnimationComplete={() => /*console.log('onAnimationComplete')*/ null}
-        backgroundColor={colors.secondary}>
-        {() => (
-          <View style={classes.circle}>
-            <Text style={classes.day}>{days}</Text>
-            <Text style={classes.ratio}>{`${days} / ${full}`}</Text>
-          </View>
-        )}
-      </AnimatedCircularProgress>
-
-      <View style={classes.row}>
-        <View style={classes.column}>
-          <Text style={classes.number}>{hours}</Text>
-          <Text style={[classes.title, typography.title2]}>HOURS</Text>
-        </View>
-        <View style={classes.column}>
-          <Text style={classes.number}>{minutes}</Text>
-          <Text style={[classes.title, typography.title2]}>MINUTES</Text>
-        </View>
-        <View style={classes.column}>
-          <Text style={classes.number}>{seconds}</Text>
-          <Text style={[classes.title, typography.title2]}>SECONDS</Text>
-        </View>
-      </View>
-      <DateTimePickerModal
-        isVisible={pickerMode !== null}
-        mode={pickerMode}
-        onConfirm={date => {
-          hidePicker();
-          saveEndDate(date.getTime());
-          startTimer(nowTime, date.getTime());
+      <TopBar
+        title={'Kaç gün Kaldı'}
+        leftName={'arrow-back'}
+        rightName={'calendar-month'}
+        leftIcon={() => {
+          navigation.navigate('TasksScreen');
         }}
-        onCancel={hidePicker}
-        display={inline ? 'inline' : undefined}
+        rightIcon={showDatePicker}
       />
+      <View style={classes.contentContainer}>
+        <AnimatedCircularProgress
+          size={180}
+          width={8}
+          fill={fill}
+          tintColor={colors.primary}
+          onAnimationComplete={() =>
+            /*console.log('onAnimationComplete')*/ null
+          }
+          backgroundColor={colors.secondary}>
+          {() => (
+            <View style={classes.circle}>
+              <Text style={classes.day}>{days}</Text>
+              <Text style={classes.ratio}>{`${days} / ${full}`}</Text>
+            </View>
+          )}
+        </AnimatedCircularProgress>
+
+        <View style={classes.row}>
+          <View style={classes.column}>
+            <Text style={classes.number}>{hours}</Text>
+            <Text style={[classes.title, typography.title2]}>HOURS</Text>
+          </View>
+          <View style={classes.column}>
+            <Text style={classes.number}>{minutes}</Text>
+            <Text style={[classes.title, typography.title2]}>MINUTES</Text>
+          </View>
+          <View style={classes.column}>
+            <Text style={classes.number}>{seconds}</Text>
+            <Text style={[classes.title, typography.title2]}>SECONDS</Text>
+          </View>
+        </View>
+        <DateTimePickerModal
+          isVisible={pickerMode !== null}
+          mode={pickerMode}
+          onConfirm={date => {
+            hidePicker();
+            saveEndDate(date.getTime());
+            startTimer(nowTime, date.getTime());
+          }}
+          onCancel={hidePicker}
+          display={inline ? 'inline' : undefined}
+        />
+      </View>
     </View>
   );
 };

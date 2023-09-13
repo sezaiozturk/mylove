@@ -52,6 +52,7 @@ const HomeTab = () => {
         name="TasksScreen"
         component={Tasks}
         options={{
+          title: 'Yapılacaklar',
           drawerIcon: ({color}) => (
             <Text>
               <Icon name={'task-alt'} size={22} color={color} />
@@ -63,6 +64,7 @@ const HomeTab = () => {
         name="DayScreen"
         component={Day}
         options={{
+          title: 'Kaç gündür beraberiz',
           drawerIcon: ({color}) => (
             <Text>
               <Icon name={'today'} size={22} color={color} />
@@ -74,6 +76,7 @@ const HomeTab = () => {
         name="CounterScreen"
         component={Counter}
         options={{
+          title: 'Kaç gün kaldı ?',
           drawerIcon: ({color}) => (
             <Text>
               <Icon name={'access-time'} size={22} color={color} />

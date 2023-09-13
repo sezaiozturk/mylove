@@ -19,7 +19,7 @@ const Drawer = props => {
         {...props}
         contentContainerStyle={classes.contentContainer}>
         <Image
-          source={require('../../../assets/images/myPhoto.jpeg')}
+          source={require('../../../assets/images/love.jpg')}
           style={classes.photo}
         />
         <View style={classes.itemContainer}>
