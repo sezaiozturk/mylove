@@ -101,6 +101,65 @@ const Router = () => {
         .collection('User')
         .doc(currentUser.uid)
         .get();
+      if (response._data.matchId === undefined) {
+        //initial profile screen
+        //setInitial('ProfileScreen');
+        setInitial('LoginScreen');
+        SplashScreen.hide();
+      } else {
+        //initial homeTab screen
+        getInfo(response._data);
+        //herşey tamam
+        //tüm veriler=response._data
+      }
+    } else {
+      //initial login screen
+      setInitial('LoginScreen');
+      SplashScreen.hide();
+    }
+  };
+  const getInfo = async data => {
+    let response;
+    response = await firestore().collection('Match').doc(data.matchId).get();
+    const match = response._data;
+    const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
+
+    response = await firestore().collection('User').doc(user2Id).get();
+
+    //dispatch(setMatchId(data.matchId));
+    //dispatch(setUser1Id(currentUser.uid));
+    //dispatch(setUser2Id(user2Id));
+    dispatch(setMatchInfo(match));
+    dispatch(setUser1Info(data));
+    dispatch(setUser2Info(response._data));
+    setInitial('HomeTab');
+    SplashScreen.hide();
+  };
+
+  return initial != null ? (
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName={initial}>
+      <Stack.Screen name="SignupScreen" component={Signup} />
+      <Stack.Screen name="LoginScreen" component={Login} />
+      <Stack.Screen name="ForgotScreen" component={ForgotPassword} />
+      <Stack.Screen name="ProfileScreen" component={Profile} />
+      <Stack.Screen name="MatchScreen" component={Match} />
+      <Stack.Screen name="HomeTab" component={HomeTab} />
+    </Stack.Navigator>
+  ) : null;
+};
+
+export default Router;
+
+/**
+ * 
+ *  const accountControl = async currentUser => {
+    if (currentUser != null) {
+      const response = await firestore()
+        .collection('User')
+        .doc(currentUser.uid)
+        .get();
       SplashScreen.hide();
       if (response._data === undefined) {
         //initial profile screen
@@ -138,19 +197,4 @@ const Router = () => {
     dispatch(setUser2Info(response._data));
     setInitial('HomeTab');
   };
-
-  return initial != null ? (
-    <Stack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName={initial}>
-      <Stack.Screen name="SignupScreen" component={Signup} />
-      <Stack.Screen name="LoginScreen" component={Login} />
-      <Stack.Screen name="ForgotScreen" component={ForgotPassword} />
-      <Stack.Screen name="ProfileScreen" component={Profile} />
-      <Stack.Screen name="MatchScreen" component={Match} />
-      <Stack.Screen name="HomeTab" component={HomeTab} />
-    </Stack.Navigator>
-  ) : null;
-};
-
-export default Router;
+ */

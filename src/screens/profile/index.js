@@ -156,7 +156,7 @@ const Profile = ({navigation}) => {
                 onConfirm={date => {
                   hidePicker();
                   handleChange('dateOfBirth');
-                  setDateOfBirth(date);
+                  setDateOfBirth(date.getTime());
                 }}
                 onCancel={hidePicker}
                 display={inline ? 'inline' : undefined}

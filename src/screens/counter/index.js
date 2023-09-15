@@ -62,10 +62,10 @@ const Counter = ({navigation}) => {
     <View style={classes.container}>
       <TopBar
         title={'Kaç gün Kaldı'}
-        leftName={'arrow-back'}
+        leftName={'menu'}
         rightName={'calendar-month'}
         leftIcon={() => {
-          navigation.navigate('TasksScreen');
+          navigation.openDrawer();
         }}
         rightIcon={showDatePicker}
       />

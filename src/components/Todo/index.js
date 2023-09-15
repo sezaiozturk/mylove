@@ -10,6 +10,7 @@ const Todo = ({id, task, status = 'wait', userId, handleTask}) => {
   const classes = styles({colors});
   return (
     <TouchableOpacity
+      key={id}
       activeOpacity={1}
       onLongPress={() => handleTask({id, task, status, userId})}
       style={[

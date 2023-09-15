@@ -1,9 +1,9 @@
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Input, Button} from '../../components';
 import {Formik} from 'formik';
 import style from './stylesheet';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {nameSchema} from '../authentication/validationSchema';
 import auth from '@react-native-firebase/auth';
@@ -15,19 +15,59 @@ import QRCode from 'react-native-qrcode-svg';
 import Clipboard from '@react-native-clipboard/clipboard';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
+import {
+  setUser1Info,
+  setUser2Info,
+  setMatchInfo,
+} from '../../redux/users/usersSlice';
 
 const Match = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
-
   const [page, setPage] = useState(true);
   const currentUid = auth().currentUser.uid;
+  const [uid, setUid] = useState('');
+  const dispatch = useDispatch();
+
+  const getInfo = async matchId => {
+    let response;
+    response = await firestore().collection('Match').doc(matchId).get();
+    const match = response._data;
+    // const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
+    const user2Id = match.uid1 == currentUid ? match.uid2 : match.uid1;
+
+    const user1Info = await firestore()
+      .collection('User')
+      .doc(currentUid)
+      .get();
+    const user2Info = await firestore().collection('User').doc(user2Id).get();
+
+    dispatch(setMatchInfo(match));
+    dispatch(setUser1Info(user1Info._data));
+    dispatch(setUser2Info(user2Info._data));
+    console.log(match);
+    console.log(user1Info);
+    console.log(user2Info);
+    navigation.navigate('HomeTab');
+  };
 
   const toggleScanner = () => {
     setPage(!page);
   };
 
+  const matchObserve = () => {
+    firestore()
+      .collection('User')
+      .doc(currentUid)
+      .onSnapshot(querySnapshot => {
+        console.log(querySnapshot._data.matchId);
+        const control = querySnapshot._data.matchId;
+        if (control != undefined) {
+          getInfo(control);
+        }
+      });
+  };
   const qrControl = async data => {
     if (data.length == 28 && data != currentUid) {
       const user = await firestore().collection('User').doc(data).get();
@@ -62,7 +102,7 @@ const Match = ({navigation}) => {
                   matchId,
                 })
                 .then(() => {
-                  navigation.navigate('HomeTab');
+                  getInfo(matchId);
                 });
             });
         });
@@ -80,6 +120,18 @@ const Match = ({navigation}) => {
       console.log(response);
     }
   };
+  const handleUid = async () => {
+    let response = await qrControl(uid);
+    if (response === true) {
+      match(uid);
+    } else {
+      console.log(response);
+    }
+  };
+  useEffect(() => {
+    matchObserve();
+  }, []);
+
   return page ? (
     <View style={classes.container}>
       <View style={classes.qrContainer}>
@@ -111,13 +163,28 @@ const Match = ({navigation}) => {
       <View style={classes.scannerContainer}>
         <View style={classes.row}>
           <View style={{flex: 1}}>
-            <Input />
+            <Input
+              placeHolder={'Sevgilinizin 28 haneli kodunu giriniz...'}
+              onChangeText={text => setUid(text)}
+            />
           </View>
-          <TouchableOpacity onPress={toggleScanner}>
-            <Text>
-              <Icon name="qrcode-scan" size={30} color={colors.primary} />
-            </Text>
-          </TouchableOpacity>
+          {uid.length != 28 ? (
+            <TouchableOpacity onPress={toggleScanner}>
+              <Text>
+                <Icon name="qrcode-scan" size={30} color={colors.primary} />
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleUid}>
+              <Text>
+                <Icon
+                  name="check-circle-outline"
+                  size={30}
+                  color={colors.primary}
+                />
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View>

@@ -7,6 +7,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import auth from '@react-native-firebase/auth';
 
 const Drawer = props => {
   const colors = useSelector(({theme}) => theme.colors);
@@ -26,11 +27,19 @@ const Drawer = props => {
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
-      <TouchableOpacity style={classes.footer}>
-        <Text>
-          <Icon name={'logout'} size={22} color={colors.text} />
-        </Text>
-        <Text style={classes.text}>Çıkış</Text>
+      <TouchableOpacity
+        style={classes.footer}
+        onPress={() => {
+          auth().signOut();
+          props.navigation.navigate('LoginScreen');
+        }}>
+        <View style={{flexDirection: 'row', gap: 10}}>
+          <Text>
+            <Icon name={'logout'} size={22} color={colors.text} />
+          </Text>
+          <Text style={classes.text}>Çıkış</Text>
+        </View>
+        <Text style={classes.text}>version 0.1(beta)</Text>
       </TouchableOpacity>
     </View>
   );

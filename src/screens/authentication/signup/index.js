@@ -20,7 +20,7 @@ const Signup = ({navigation}) => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        AsyncStorage.setItem(email, 0);
+        //AsyncStorage.setItem(email, 0);
         navigation.navigate('LoginScreen');
         setLoad(false);
       })

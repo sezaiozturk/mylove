@@ -3,18 +3,25 @@ import React, {useState} from 'react';
 import {Input, Button} from '../../../components';
 import {Formik} from 'formik';
 import style from '../stylesheet';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {loginSchema} from '../validationSchema';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  setUser1Info,
+  setUser2Info,
+  setMatchInfo,
+} from '../../../redux/users/usersSlice';
 
 const Login = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [load, setLoad] = useState(false);
+  const match = useSelector(({users}) => users.matchInfo);
+  let currentUser = null;
+  const dispatch = useDispatch();
 
   const accountControl = async currentUser => {
     const response = await firestore()
@@ -22,17 +29,29 @@ const Login = ({navigation}) => {
       .doc(currentUser.uid)
       .get();
     //console.log(response);
-    if (response._data === undefined) {
+    if (response._data.matchId === undefined) {
       navigation.navigate('ProfileScreen');
     } else {
-      if (response._data.matchId === undefined) {
-        //initial match screen
-        navigation.navigate('MatchScreen');
-      } else {
-        //initial homeTab screen
-        navigation.navigate('HomeTab');
-      }
+      //initial homeTab screen
+      getInfo(response._data);
     }
+    setLoad(false);
+  };
+  const getInfo = async data => {
+    let response;
+    response = await firestore().collection('Match').doc(data.matchId).get();
+    const match = response._data;
+    const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
+
+    response = await firestore().collection('User').doc(user2Id).get();
+
+    //dispatch(setMatchId(data.matchId));
+    //dispatch(setUser1Id(currentUser.uid));
+    //dispatch(setUser2Id(user2Id));
+    dispatch(setMatchInfo(match));
+    dispatch(setUser1Info(data));
+    dispatch(setUser2Info(response._data));
+    navigation.navigate('HomeTab');
   };
 
   const handleLogin = async ({email, password}) => {
@@ -40,9 +59,8 @@ const Login = ({navigation}) => {
     try {
       const isLogin = await auth().signInWithEmailAndPassword(email, password);
       if (isLogin) {
-        const currentUser = auth().currentUser;
+        currentUser = auth().currentUser;
         accountControl(currentUser);
-        setLoad(false);
       }
     } catch (e) {
       console.log(e);

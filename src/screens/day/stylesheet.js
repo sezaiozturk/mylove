@@ -10,25 +10,14 @@ const style = ({colors}) => {
       justifyContent: 'center',
       flexDirection: 'row',
       marginTop: 15,
-    },
-    maskedContainer: {
-      flexDirection: 'row',
-      height: '100%',
-      flex: 1,
-    },
-    masked: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1,
-    },
-    heart: {
-      height: 150,
-      width: 150,
+      gap: 30,
     },
     photo: {
+      borderColor: colors.primary,
       borderRadius: 75,
-      height: 175,
-      width: 175,
+      borderWidth: 2,
+      height: 150,
+      width: 150,
     },
     dayContainer: {
       alignItems: 'center',

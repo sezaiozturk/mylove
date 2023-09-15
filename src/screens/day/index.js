@@ -26,6 +26,12 @@ const Day = ({navigation}) => {
     startDay != undefined ? setStartDay(distanceDay(startDay, nowTime)) : null;
   }, []);
 
+  const avatar = genderId => {
+    return genderId === 1
+      ? require('../../../assets/images/woman.png')
+      : require('../../../assets/images/man.png');
+  };
+
   const saveStartDate = async startDate => {
     try {
       firestore()
@@ -41,40 +47,37 @@ const Day = ({navigation}) => {
       console.log(error);
     }
   };
-
+  console.log(user2.downloadUrl);
   return (
     <View style={classes.container}>
       <TopBar
         title={'Kaç gündür beraberiz'}
-        leftName={'arrow-back'}
+        leftName={'menu'}
         rightName={'calendar-month'}
         leftIcon={() => {
-          navigation.navigate('TasksScreen');
+          navigation.openDrawer();
         }}
         rightIcon={showDatePicker}
       />
       <View style={classes.photoContainer}>
         <View>
           <Image
-            source={require('../../../assets/icons/heartLight.png')}
-            style={{
-              width: 200,
-              height: 180,
-              position: 'relative',
-            }}
+            source={
+              user1.downloadUrl === null
+                ? avatar(user1.genderId)
+                : {uri: user1.downloadUrl}
+            }
+            style={classes.photo}
           />
+        </View>
+        <View>
           <Image
-            source={{uri: user2.downloadUrl}}
-            style={{
-              width: 200,
-              height: 180,
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              zIndex: -1,
-            }}
+            source={
+              user2.downloadUrl === null
+                ? avatar(user2.genderId)
+                : {uri: user2.downloadUrl}
+            }
+            style={classes.photo}
           />
         </View>
       </View>

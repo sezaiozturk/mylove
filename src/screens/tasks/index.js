@@ -115,12 +115,14 @@ const Tasks = ({navigation}) => {
       .where('matchId', '==', match.matchId)
       .onSnapshot(querySnapshot => {
         let x = [];
-        querySnapshot.forEach(async documentSnapshot => {
-          const obj = {
-            ...documentSnapshot.data(),
-          };
-          x.push(obj);
-        });
+        if (querySnapshot != null) {
+          querySnapshot.forEach(async documentSnapshot => {
+            const obj = {
+              ...documentSnapshot.data(),
+            };
+            x.push(obj);
+          });
+        }
         x.sort(function (a, b) {
           return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
         });
@@ -155,6 +157,18 @@ const Tasks = ({navigation}) => {
       console.log(error);
     }
   };
+  const renderItem = ({item}) => (
+    <Todo
+      id={item.uuid}
+      task={item.task}
+      status={item.status}
+      userId={item.userId}
+      handleTask={task => {
+        setOptionsToggle(!optionsToggle);
+        setSelectedTask(task);
+      }}
+    />
+  );
   useEffect(() => {
     getTodo();
   }, []);
@@ -172,18 +186,7 @@ const Tasks = ({navigation}) => {
       <FlatList
         extraData={isRender}
         data={task}
-        renderItem={({item}) => (
-          <Todo
-            id={item.uuid}
-            task={item.task}
-            status={item.status}
-            userId={item.userId}
-            handleTask={task => {
-              setOptionsToggle(!optionsToggle);
-              setSelectedTask(task);
-            }}
-          />
-        )}
+        renderItem={renderItem}
         keyExtractor={item => item.uuid}
         style={{
           marginVertical: 10,
@@ -208,7 +211,9 @@ const Tasks = ({navigation}) => {
           <View style={classes.infoDialog}>
             <Text style={[classes.title, typography.title2]}>Ne Demek ?</Text>
             {info.map(item => {
-              return <Todo task={item.task} status={item.status} />;
+              return (
+                <Todo id={item.id} task={item.task} status={item.status} />
+              );
             })}
           </View>
         </TouchableOpacity>

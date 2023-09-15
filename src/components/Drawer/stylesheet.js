@@ -22,6 +22,7 @@ const style = ({colors}) => {
     },
     footer: {
       backgroundColor: colors.secondary,
+      justifyContent: 'space-between',
       borderColor: colors.text,
       flexDirection: 'row',
       paddingHorizontal: 20,
