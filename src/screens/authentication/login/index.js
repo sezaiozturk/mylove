@@ -28,12 +28,15 @@ const Login = ({navigation}) => {
       .collection('User')
       .doc(currentUser.uid)
       .get();
-    //console.log(response);
-    if (response._data.matchId === undefined) {
+    if (response._data === undefined) {
       navigation.navigate('ProfileScreen');
     } else {
-      //initial homeTab screen
-      getInfo(response._data);
+      if (response._data.matchId != undefined) {
+        //initial homeTab screen
+        getInfo(response._data);
+      } else {
+        navigation.navigate('ProfileScreen');
+      }
     }
     setLoad(false);
   };
@@ -45,9 +48,6 @@ const Login = ({navigation}) => {
 
     response = await firestore().collection('User').doc(user2Id).get();
 
-    //dispatch(setMatchId(data.matchId));
-    //dispatch(setUser1Id(currentUser.uid));
-    //dispatch(setUser2Id(user2Id));
     dispatch(setMatchInfo(match));
     dispatch(setUser1Info(data));
     dispatch(setUser2Info(response._data));
@@ -142,5 +142,4 @@ const Login = ({navigation}) => {
     </View>
   );
 };
-
 export default Login;

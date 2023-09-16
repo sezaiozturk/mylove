@@ -19,9 +19,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Drawer} from '../components';
 import {
-  setMatchId,
-  setUser1Id,
-  setUser2Id,
   setUser1Info,
   setUser2Info,
   setMatchInfo,
@@ -101,16 +98,19 @@ const Router = () => {
         .collection('User')
         .doc(currentUser.uid)
         .get();
-      if (response._data.matchId === undefined) {
+      if (response._data === undefined) {
         //initial profile screen
-        //setInitial('ProfileScreen');
         setInitial('LoginScreen');
         SplashScreen.hide();
       } else {
-        //initial homeTab screen
-        getInfo(response._data);
-        //herşey tamam
-        //tüm veriler=response._data
+        if (response._data.matchId != undefined) {
+          //initial homeTab screen
+          getInfo(response._data);
+        } else {
+          //initial profile screen
+          setInitial('LoginScreen');
+          SplashScreen.hide();
+        }
       }
     } else {
       //initial login screen
@@ -126,13 +126,11 @@ const Router = () => {
 
     response = await firestore().collection('User').doc(user2Id).get();
 
-    //dispatch(setMatchId(data.matchId));
-    //dispatch(setUser1Id(currentUser.uid));
-    //dispatch(setUser2Id(user2Id));
     dispatch(setMatchInfo(match));
     dispatch(setUser1Info(data));
     dispatch(setUser2Info(response._data));
     setInitial('HomeTab');
+
     SplashScreen.hide();
   };
 
@@ -151,50 +149,3 @@ const Router = () => {
 };
 
 export default Router;
-
-/**
- * 
- *  const accountControl = async currentUser => {
-    if (currentUser != null) {
-      const response = await firestore()
-        .collection('User')
-        .doc(currentUser.uid)
-        .get();
-      SplashScreen.hide();
-      if (response._data === undefined) {
-        //initial profile screen
-        setInitial('ProfileScreen');
-      } else {
-        if (response._data.matchId === undefined) {
-          //initial match screen
-          setInitial('MatchScreen');
-        } else {
-          //initial homeTab screen
-          getInfo(response._data);
-          //herşey tamam
-          //tüm veriler=response._data
-        }
-      }
-    } else {
-      //initial login screen
-      setInitial('LoginScreen');
-      SplashScreen.hide();
-    }
-  };
-  const getInfo = async data => {
-    let response;
-    response = await firestore().collection('Match').doc(data.matchId).get();
-    const match = response._data;
-    const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
-
-    response = await firestore().collection('User').doc(user2Id).get();
-
-    //dispatch(setMatchId(data.matchId));
-    //dispatch(setUser1Id(currentUser.uid));
-    //dispatch(setUser2Id(user2Id));
-    dispatch(setMatchInfo(match));
-    dispatch(setUser1Info(data));
-    dispatch(setUser2Info(response._data));
-    setInitial('HomeTab');
-  };
- */

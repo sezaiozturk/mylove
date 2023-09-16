@@ -1,16 +1,11 @@
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Input, Button} from '../../components';
-import {Formik} from 'formik';
+import {Input} from '../../components';
 import style from './stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {nameSchema} from '../authentication/validationSchema';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import QRCode from 'react-native-qrcode-svg';
 import Clipboard from '@react-native-clipboard/clipboard';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -26,29 +21,27 @@ const Match = ({navigation}) => {
   const typography = useSelector(({theme}) => theme.typography);
   const classes = style({colors, typography});
   const [page, setPage] = useState(true);
-  const currentUid = auth().currentUser.uid;
   const [uid, setUid] = useState('');
   const dispatch = useDispatch();
+  const currentUid = auth().currentUser.uid;
 
   const getInfo = async matchId => {
     let response;
     response = await firestore().collection('Match').doc(matchId).get();
     const match = response._data;
-    // const user2Id = match.uid1 == currentUser.uid ? match.uid2 : match.uid1;
     const user2Id = match.uid1 == currentUid ? match.uid2 : match.uid1;
 
     const user1Info = await firestore()
       .collection('User')
       .doc(currentUid)
       .get();
+
     const user2Info = await firestore().collection('User').doc(user2Id).get();
 
     dispatch(setMatchInfo(match));
     dispatch(setUser1Info(user1Info._data));
     dispatch(setUser2Info(user2Info._data));
-    console.log(match);
-    console.log(user1Info);
-    console.log(user2Info);
+
     navigation.navigate('HomeTab');
   };
 
@@ -61,7 +54,6 @@ const Match = ({navigation}) => {
       .collection('User')
       .doc(currentUid)
       .onSnapshot(querySnapshot => {
-        console.log(querySnapshot._data.matchId);
         const control = querySnapshot._data.matchId;
         if (control != undefined) {
           getInfo(control);
@@ -221,23 +213,3 @@ const Match = ({navigation}) => {
   );
 };
 export default Match;
-
-/*
-      <Button
-        title="Copy "
-        onPress={() => {
-          Clipboard.setString('olmadıı');
-        }}
-      />
-      <Button
-        title="Paste "
-        onPress={async () => {
-          const text = await Clipboard.getString();
-          setCopiedText(text);
-          console.log(copiedText);
-        }}
-        {copiedText && (
-        
-      )}
-     
-      />*/
