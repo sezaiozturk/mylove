@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
+let interval;
 
-const useCalendar = () => {
+const useCalendar = (mode = 'date') => {
   const [pickerMode, setPickerMode] = useState(null);
   const [inline, setInline] = useState(false);
   const [full, setFull] = useState(0);
@@ -8,9 +9,8 @@ const useCalendar = () => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-
   const showDatePicker = () => {
-    setPickerMode('datetime');
+    setPickerMode(mode);
   };
 
   const hidePicker = () => {
@@ -27,7 +27,7 @@ const useCalendar = () => {
     if ((firstDate && secondDate) != undefined) {
       setFull(Math.floor((secondDate - firstDate) / (1000 * 60 * 60 * 24)) + 1);
 
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         let now = new Date().getTime();
         let distance = secondDate - now;
 
@@ -40,7 +40,6 @@ const useCalendar = () => {
 
         if (distance < 0) {
           clearInterval(interval);
-          console.log('finish');
         } else {
           setDays(d);
           setHours(h);
@@ -50,9 +49,11 @@ const useCalendar = () => {
       }, 1000);
     }
   };
-  useEffect(() => {
-    startTimer();
-  }, []);
+  useEffect(() => {}, []);
+  const stop = () => {
+    console.log('stop');
+    clearInterval(interval);
+  };
 
   return {
     showDatePicker,
@@ -66,6 +67,7 @@ const useCalendar = () => {
     seconds,
     startTimer,
     distanceDay,
+    stop,
   };
 };
 export default useCalendar;

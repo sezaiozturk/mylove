@@ -14,7 +14,6 @@ const OptionsMenu = ({menuItems, handleItem}) => {
     <View style={classes.optionsDialogContainer}>
       <View style={classes.optionsDialog}>
         {menuItems.map(item => {
-          console.log(item);
           return (
             <View key={item.id}>
               <TouchableOpacity

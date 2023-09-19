@@ -9,6 +9,7 @@ import useCalendar from '../../hooks/useCalendar/useCalendar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import firestore from '@react-native-firebase/firestore';
+let timer;
 
 const Counter = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
@@ -30,7 +31,8 @@ const Counter = ({navigation}) => {
     hours,
     minutes,
     seconds,
-  } = useCalendar();
+    stop,
+  } = useCalendar('datetime');
 
   const saveEndDate = async endDate => {
     try {
@@ -47,6 +49,14 @@ const Counter = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const start = () => {
+    timer = setInterval(() => {
+      setCount(prev => (prev += 1));
+    }, 1000);
+  };
+  const stop1 = () => {
+    clearInterval(timer);
   };
 
   useEffect(() => {
@@ -107,6 +117,7 @@ const Counter = ({navigation}) => {
           onConfirm={date => {
             hidePicker();
             saveEndDate(date.getTime());
+            stop();
             startTimer(nowTime, date.getTime());
           }}
           onCancel={hidePicker}

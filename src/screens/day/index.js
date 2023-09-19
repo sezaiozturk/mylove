@@ -20,7 +20,7 @@ const Day = ({navigation}) => {
   const nowTime = new Date().getTime();
   const [startDay, setStartDay] = useState(match.startDate);
   const {showDatePicker, hidePicker, pickerMode, inline, days, distanceDay} =
-    useCalendar();
+    useCalendar('datetime');
 
   useEffect(() => {
     startDay != undefined ? setStartDay(distanceDay(startDay, nowTime)) : null;
@@ -47,7 +47,6 @@ const Day = ({navigation}) => {
       console.log(error);
     }
   };
-  console.log(user2.downloadUrl);
   return (
     <View style={classes.container}>
       <TopBar

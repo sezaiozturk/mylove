@@ -1,5 +1,5 @@
 import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './stylesheet';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -15,10 +15,12 @@ const Input = ({
   secureTextEntry,
   editable,
   multiline = false,
+  icon = true,
 }) => {
   const colors = useSelector(({theme}) => theme.colors);
   const typography = useSelector(({theme}) => theme.typography);
   const classes = styles({colors});
+  let text;
 
   return (
     <View style={classes.container}>
@@ -35,12 +37,20 @@ const Input = ({
           secureTextEntry={secureTextEntry}
           editable={editable}
           multiline={multiline}
+          ref={input => {
+            text = input;
+          }}
         />
-        <TouchableOpacity onPress={() => null}>
-          <Text>
-            <Icon name="close" size={20} color={colors.primary} />
-          </Text>
-        </TouchableOpacity>
+        {icon && (
+          <TouchableOpacity
+            onPress={() => {
+              text.clear();
+            }}>
+            <Text>
+              <Icon name="close" size={20} color={colors.primary} />
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       {errors && touched && (
         <Text style={[classes.error, typography.title1]}>{errors}</Text>

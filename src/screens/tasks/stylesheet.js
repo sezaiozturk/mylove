@@ -10,6 +10,10 @@ const style = ({colors}) => {
       width: 50,
       height: 50,
     },
+    flatList: {
+      marginVertical: 10,
+      paddingTop: 5,
+    },
     float: {
       backgroundColor: colors.primary,
       justifyContent: 'center',
@@ -56,6 +60,21 @@ const style = ({colors}) => {
       backgroundColor: 'rgba(0,0,0,0.75)',
       justifyContent: 'center',
       flex: 1,
+    },
+    emptyContainer: {
+      justifyContent: 'center',
+      paddingHorizontal: 40,
+      height: 400,
+      gap: 20,
+    },
+    title: {
+      color: colors.primary,
+      textAlign: 'center',
+      marginBottom: 10,
+    },
+    item: {
+      color: colors.text,
+      textAlign: 'justify',
     },
   });
 };

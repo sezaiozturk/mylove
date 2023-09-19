@@ -1,4 +1,4 @@
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, ToastAndroid} from 'react-native';
 import React, {useState} from 'react';
 import {Input, Button, RadioButton} from '../../components';
 import {Formik} from 'formik';
@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import useCalendar from '../../hooks/useCalendar/useCalendar';
+import {formatDate} from '../../utils';
 
 const Profile = ({navigation}) => {
   const colors = useSelector(({theme}) => theme.colors);
@@ -20,8 +21,8 @@ const Profile = ({navigation}) => {
   const [load, setLoad] = useState(false);
   const currentUser = auth().currentUser.uid;
   const [photoUrl, setPhotoUrl] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [genderId, setGenderId] = useState(1);
+  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [genderId, setGenderId] = useState(null);
   let downloadUrl = null;
   const {showDatePicker, hidePicker, pickerMode, inline} = useCalendar();
 
@@ -48,20 +49,28 @@ const Profile = ({navigation}) => {
         await referance.putFile(photoUrl);
         downloadUrl = await referance.getDownloadURL();
       }
-      firestore()
-        .collection('User')
-        .doc(currentUser)
-        .set({
-          uid: currentUser,
-          downloadUrl,
-          genderId,
-          name,
-          dateOfBirth,
-        })
-        .then(() => {
-          navigation.navigate('MatchScreen');
-          setLoad(false);
-        });
+      if (genderId != null) {
+        firestore()
+          .collection('User')
+          .doc(currentUser)
+          .set({
+            uid: currentUser,
+            downloadUrl,
+            genderId,
+            name,
+            dateOfBirth,
+          })
+          .then(() => {
+            navigation.navigate('MatchScreen');
+            setLoad(false);
+          });
+      } else {
+        ToastAndroid.show(
+          'Lütfen cinsiyetinizi belirtiniz !',
+          ToastAndroid.SHORT,
+        );
+        setLoad(false);
+      }
     } catch (error) {
       console.log(error);
       setLoad(false);
@@ -92,9 +101,10 @@ const Profile = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <Formik
+          enableReinitialize
           initialValues={{
             name: '',
-            dateOfBirth: '',
+            dateOfBirth: formatDate(dateOfBirth),
           }}
           validationSchema={nameSchema}
           onSubmit={handleSave}>
@@ -133,9 +143,9 @@ const Profile = ({navigation}) => {
                     value={values.dateOfBirth}
                     touched={touched.dateOfBirth}
                     errors={errors.dateOfBirth}
-                    placeHolder={'center date of birthday'}
-                    editable={true}
-                    onChangeText={handleChange('dateOfBirth')}
+                    placeHolder={'select your date of birthday'}
+                    editable={false}
+                    icon={false}
                   />
                 </View>
                 <TouchableOpacity
@@ -155,7 +165,6 @@ const Profile = ({navigation}) => {
                 mode={pickerMode}
                 onConfirm={date => {
                   hidePicker();
-                  handleChange('dateOfBirth');
                   setDateOfBirth(date.getTime());
                 }}
                 onCancel={hidePicker}

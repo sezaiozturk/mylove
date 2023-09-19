@@ -21,5 +21,5 @@ export const forgotSchema = Yup.object().shape({
 
 export const nameSchema = Yup.object().shape({
   name: Yup.string().required(),
-  dateOfBirth: Yup.string().required(),
+  dateOfBirth: Yup.string().required('date of birth is a required'),
 });

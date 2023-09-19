@@ -24,6 +24,26 @@ const Tasks = ({navigation}) => {
     task: 'dfsdf',
     status: 'yes',
   });
+
+  const EmptyView = () => {
+    return (
+      <View style={classes.emptyContainer}>
+        <Text style={[classes.title, typography.header2]}>
+          Nasıl Kullanılır ?
+        </Text>
+        <Text style={[classes.item, typography.title2]}>
+          1 - Beraber gerçekleştirmek istediğin anıları yaz.
+        </Text>
+        <Text style={[classes.item, typography.title2]}>
+          2 - Anıların üzerine basılı tut ve değerlendir.
+        </Text>
+        <Text style={[classes.item, typography.title2]}>
+          3 - Sevgilinle beraber karşılıklı istediklerinizi yazın.
+        </Text>
+      </View>
+    );
+  };
+
   const info = [
     {
       id: 0,
@@ -188,10 +208,8 @@ const Tasks = ({navigation}) => {
         data={task}
         renderItem={renderItem}
         keyExtractor={item => item.uuid}
-        style={{
-          marginVertical: 10,
-          paddingTop: 5,
-        }}
+        style={classes.flatList}
+        ListEmptyComponent={<EmptyView />}
       />
       <TouchableOpacity
         style={classes.float}
@@ -212,7 +230,9 @@ const Tasks = ({navigation}) => {
             <Text style={[classes.title, typography.title2]}>Ne Demek ?</Text>
             {info.map(item => {
               return (
-                <Todo id={item.id} task={item.task} status={item.status} />
+                <View key={item.id}>
+                  <Todo task={item.task} status={item.status} />
+                </View>
               );
             })}
           </View>
