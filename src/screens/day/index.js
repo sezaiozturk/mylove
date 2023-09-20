@@ -50,7 +50,7 @@ const Day = ({navigation}) => {
   return (
     <View style={classes.container}>
       <TopBar
-        title={'Kaç gündür beraberiz'}
+        title={'Aşkımızın başlangıcı !'}
         leftName={'menu'}
         rightName={'calendar-month'}
         leftIcon={() => {

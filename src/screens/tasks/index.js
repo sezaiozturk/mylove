@@ -195,7 +195,7 @@ const Tasks = ({navigation}) => {
   return (
     <View style={classes.container}>
       <TopBar
-        title={'Yapılacaklar'}
+        title={'Yapılacaklar...'}
         leftName={'menu'}
         rightName={'help-outline'}
         leftIcon={() => {

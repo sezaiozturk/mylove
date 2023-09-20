@@ -51,7 +51,6 @@ const useCalendar = (mode = 'date') => {
   };
   useEffect(() => {}, []);
   const stop = () => {
-    console.log('stop');
     clearInterval(interval);
   };
 

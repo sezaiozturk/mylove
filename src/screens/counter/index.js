@@ -50,14 +50,6 @@ const Counter = ({navigation}) => {
       console.log(error);
     }
   };
-  const start = () => {
-    timer = setInterval(() => {
-      setCount(prev => (prev += 1));
-    }, 1000);
-  };
-  const stop1 = () => {
-    clearInterval(timer);
-  };
 
   useEffect(() => {
     startTimer(match.counterStart, match.counterEnd);
@@ -71,7 +63,7 @@ const Counter = ({navigation}) => {
   return (
     <View style={classes.container}>
       <TopBar
-        title={'Kaç gün Kaldı'}
+        title={'Kaç gün Kaldı ?'}
         leftName={'menu'}
         rightName={'calendar-month'}
         leftIcon={() => {

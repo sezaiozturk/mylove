@@ -49,7 +49,7 @@ const HomeTab = () => {
         name="TasksScreen"
         component={Tasks}
         options={{
-          title: 'Yapılacaklar',
+          title: 'Yapılacaklar...',
           drawerIcon: ({color}) => (
             <Text>
               <Icon name={'task-alt'} size={22} color={color} />
@@ -61,7 +61,7 @@ const HomeTab = () => {
         name="DayScreen"
         component={Day}
         options={{
-          title: 'Kaç gündür beraberiz',
+          title: 'Aşkımızın başlangıcı !',
           drawerIcon: ({color}) => (
             <Text>
               <Icon name={'today'} size={22} color={color} />
